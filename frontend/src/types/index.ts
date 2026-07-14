@@ -158,6 +158,21 @@ export interface Subscription {
   expires_at: string | null;
 }
 
+export interface InvitationTemplate {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  description: string | null;
+  image: string | null;
+  preview_image: string | null;
+  is_premium: boolean;
+  favorites_count: number;
+  is_favorited: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CmsFaq {
   id: string;
   question: string;

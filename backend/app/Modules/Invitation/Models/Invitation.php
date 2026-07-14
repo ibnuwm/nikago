@@ -92,10 +92,10 @@ class Invitation extends Model
             return $query;
         }
 
-        $escaped = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search);
+        $escaped = str_replace(['#', '%', '_'], ['##', '#%', '#_'], $search);
 
         return $query->where(function (Builder $q) use ($escaped): void {
-            $q->where('title', 'like', "%{$escaped}%");
+            $q->whereRaw('title LIKE ? ESCAPE \'#\'', ["%{$escaped}%"]);
         });
     }
 
