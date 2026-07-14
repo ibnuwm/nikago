@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function (): void {
             Route::prefix('auth')->group(__DIR__ . '/../routes/auth.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/dashboard.php');
+            Route::prefix('api')->group(__DIR__ . '/../routes/cms.php');
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {

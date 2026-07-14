@@ -125,3 +125,36 @@ export interface Subscription {
   status: string;
   expires_at: string | null;
 }
+
+export interface CmsFaq {
+  id: string;
+  question: string;
+  answer: string;
+  category: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CmsBanner {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  image: string | null;
+  link: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CmsPage {
+  id: string;
+  title: string;
+  slug: string;
+  content: string | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}

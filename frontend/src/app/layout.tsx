@@ -14,8 +14,41 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nikago - Wedding Super App",
-  description: "Plan your perfect wedding with Nikago",
+  title: {
+    default: 'Nikago - Wedding Super App',
+    template: '%s | Nikago',
+  },
+  description:
+    'Plan your perfect wedding with Nikago. Manage guests, track budgets, find vendors, and create the wedding of your dreams with our all-in-one wedding planning platform.',
+  keywords: ['wedding', 'planning', 'guest management', 'budget tracker', 'vendor directory', 'RSVP', 'wedding website'],
+  authors: [{ name: 'Nikago' }],
+  creator: 'Nikago',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://nikago.com',
+    siteName: 'Nikago',
+    title: 'Nikago - Wedding Super App',
+    description:
+      'Plan your perfect wedding with Nikago. Manage guests, track budgets, find vendors, and create the wedding of your dreams.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nikago - Wedding Super App',
+    description:
+      'Plan your perfect wedding with Nikago. Manage guests, track budgets, find vendors, and create the wedding of your dreams.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
