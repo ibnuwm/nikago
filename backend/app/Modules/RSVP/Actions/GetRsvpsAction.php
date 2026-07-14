@@ -27,6 +27,14 @@ class GetRsvpsAction extends Action
             ->when($request->query('attendance'), function ($query, $attendance): void {
                 $query->attendance($attendance);
             })
+            ->when($request->query('search'), function ($query, $search): void {
+                $query->whereHas('guest', function ($q) use ($search): void {
+                    $escaped = str_replace(['#', '%', '_'], ['##', '#%', '#_'], $search);
+                    $q->whereRaw('LOWER(name) LIKE ? ESCAPE \'#\'', ['%' . strtolower($escaped) . '%'])
+                        ->orWhereRaw('LOWER(phone) LIKE ? ESCAPE \'#\'', ['%' . strtolower($escaped) . '%'])
+                        ->orWhereRaw('LOWER(email) LIKE ? ESCAPE \'#\'', ['%' . strtolower($escaped) . '%']);
+                });
+            })
             ->with('guest')
             ->orderBy(
                 $this->getSortField($request, self::SORT_ALLOWED, 'created_at'),

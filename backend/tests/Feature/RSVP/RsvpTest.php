@@ -7,6 +7,7 @@ use App\Modules\Guest\Models\Guest;
 use App\Modules\RSVP\Models\Rsvp;
 use App\Modules\RSVP\Models\RsvpLog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 
 uses(RefreshDatabase::class);
 
@@ -430,4 +431,207 @@ test('rsvp update is idempotent for same attendance', function () {
     $logs = RsvpLog::where('rsvp_id', $rsvp->id)->count();
 
     $this->assertEquals(0, $logs);
+});
+
+test('user cannot access rsvp from another tenant', function () {
+    $userA = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 1,
+    ]);
+
+    $userB = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 2,
+    ]);
+
+    $guestB = Guest::factory()->create([
+        'tenant_id' => $userB->tenant_id,
+        'wedding_id' => 1,
+    ]);
+
+    $rsvpB = Rsvp::factory()->create([
+        'guest_id' => $guestB->id,
+        'tenant_id' => $userB->tenant_id,
+    ]);
+
+    $tokenA = $userA->createToken('auth-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $tokenA)
+        ->getJson("/api/rsvps/{$rsvpB->uuid}");
+
+    $response->assertNotFound();
+});
+
+test('statistics returns zeros when no rsvps', function () {
+    $user = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 1,
+    ]);
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        ->getJson('/api/rsvps/statistics');
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+            'data' => [
+                'total_rsvps' => 0,
+                'yes' => 0,
+                'no' => 0,
+                'maybe' => 0,
+                'total_guests' => 0,
+                'attendance_rate' => 0,
+            ],
+        ]);
+});
+
+test('creating rsvp for guest with existing rsvp updates it', function () {
+    $user = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 1,
+    ]);
+
+    $guest = Guest::factory()->create([
+        'tenant_id' => $user->tenant_id,
+        'wedding_id' => 1,
+    ]);
+
+    Rsvp::factory()->yes()->create([
+        'guest_id' => $guest->id,
+        'tenant_id' => $user->tenant_id,
+        'total_guest' => 1,
+    ]);
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        ->postJson('/api/rsvps', [
+            'guest_uuid' => $guest->uuid,
+            'attendance' => 'NO',
+            'total_guest' => 3,
+            'message' => 'Changed my mind',
+        ]);
+
+    $response->assertCreated()
+        ->assertJson([
+            'success' => true,
+            'data' => [
+                'attendance' => 'NO',
+                'total_guest' => 3,
+                'message' => 'Changed my mind',
+            ],
+        ]);
+
+    $this->assertDatabaseHas('rsvp_logs', [
+        'old_status' => 'YES',
+        'new_status' => 'NO',
+    ]);
+
+    $this->assertDatabaseCount('rsvps', 1);
+});
+
+test('authenticated user can import rsvps via csv', function () {
+    $user = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 1,
+    ]);
+
+    Guest::factory()->create([
+        'tenant_id' => $user->tenant_id,
+        'wedding_id' => 1,
+        'name' => 'Budi Santoso',
+    ]);
+
+    Guest::factory()->create([
+        'tenant_id' => $user->tenant_id,
+        'wedding_id' => 1,
+        'name' => 'Siti Rahayu',
+    ]);
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    $csv = "name,attendance,total_guest,message\nBudi Santoso,YES,2,Happy wedding!\nSiti Rahayu,MAYBE,1,";
+    $tmpPath = storage_path('app/test-import.csv');
+    file_put_contents($tmpPath, $csv);
+    $file = new UploadedFile($tmpPath, 'rsvps.csv', 'text/csv', null, true);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        ->postJson('/api/rsvps/import', [
+            'file' => $file,
+        ]);
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+            'data' => [
+                'imported' => 2,
+            ],
+        ]);
+
+    $this->assertDatabaseHas('rsvps', [
+        'attendance' => 'YES',
+        'total_guest' => 2,
+        'message' => 'Happy wedding!',
+    ]);
+
+    $this->assertDatabaseHas('rsvps', [
+        'attendance' => 'MAYBE',
+        'total_guest' => 1,
+    ]);
+
+    @unlink($tmpPath);
+});
+
+test('rsvps can be searched by guest name', function () {
+    $user = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 1,
+    ]);
+
+    $guest1 = Guest::factory()->create([
+        'tenant_id' => $user->tenant_id,
+        'wedding_id' => 1,
+        'name' => 'Budi Santoso',
+    ]);
+
+    $guest2 = Guest::factory()->create([
+        'tenant_id' => $user->tenant_id,
+        'wedding_id' => 1,
+        'name' => 'Siti Rahayu',
+    ]);
+
+    Rsvp::factory()->create([
+        'guest_id' => $guest1->id,
+        'tenant_id' => $user->tenant_id,
+    ]);
+
+    Rsvp::factory()->create([
+        'guest_id' => $guest2->id,
+        'tenant_id' => $user->tenant_id,
+    ]);
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        ->getJson('/api/rsvps?search=Budi');
+
+    $response->assertOk()
+        ->assertJsonCount(1, 'data');
+});
+
+test('import requires file', function () {
+    $user = User::factory()->create([
+        'status' => User::STATUS_ACTIVE,
+        'tenant_id' => 1,
+    ]);
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        ->postJson('/api/rsvps/import', []);
+
+    $response->assertUnprocessable()
+        ->assertJsonValidationErrors(['file']);
 });

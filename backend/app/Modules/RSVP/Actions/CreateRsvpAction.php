@@ -26,7 +26,9 @@ class CreateRsvpAction extends Action
             ->firstOrFail();
 
         return DB::transaction(function () use ($request, $user, $guest): Rsvp {
-            $existingRsvp = Rsvp::where('guest_id', $guest->id)->first();
+            $existingRsvp = Rsvp::where('guest_id', $guest->id)
+                ->lockForUpdate()
+                ->first();
 
             if ($existingRsvp) {
                 $oldAttendance = $existingRsvp->attendance;

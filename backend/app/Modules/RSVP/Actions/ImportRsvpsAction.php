@@ -63,7 +63,9 @@ class ImportRsvpsAction extends Action
                 }
 
                 DB::transaction(function () use ($guest, $attendance, $totalGuest, $message, $tenantId): void {
-                    $existingRsvp = Rsvp::where('guest_id', $guest->id)->first();
+                    $existingRsvp = Rsvp::where('guest_id', $guest->id)
+                        ->lockForUpdate()
+                        ->first();
 
                     if ($existingRsvp) {
                         $oldAttendance = $existingRsvp->attendance;

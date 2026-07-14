@@ -12,6 +12,7 @@ use App\Modules\RSVP\Actions\GetRsvpsAction;
 use App\Modules\RSVP\Actions\GetRsvpStatisticsAction;
 use App\Modules\RSVP\Actions\ImportRsvpsAction;
 use App\Modules\RSVP\Actions\UpdateRsvpAction;
+use App\Modules\RSVP\Requests\StoreImportRsvpsRequest;
 use App\Modules\RSVP\Requests\StoreRsvpRequest;
 use App\Modules\RSVP\Requests\UpdateRsvpRequest;
 use App\Modules\RSVP\Resources\RsvpResource;
@@ -119,13 +120,9 @@ class RsvpController extends Controller
         ]);
     }
 
-    public function import(Request $request, ImportRsvpsAction $action): JsonResponse
+    public function import(StoreImportRsvpsRequest $request, ImportRsvpsAction $action): JsonResponse
     {
         $this->ensureUserIsActive($request);
-
-        $request->validate([
-            'file' => ['required', 'file', 'mimes:csv,txt', 'max:10240'],
-        ]);
 
         $result = $action->execute($request);
 
