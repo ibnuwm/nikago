@@ -1,28 +1,33 @@
 'use client';
 
-import { useUser } from '@/hooks/use-auth';
+import { useUser, useLogout } from '@/hooks/use-auth';
+import { useDashboard } from '@/features/dashboard/hooks/use-dashboard';
 import { useAuthStore } from '@/stores/auth-store';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { useLogout } from '@/hooks/use-auth';
+import { SummaryCard } from '@/features/dashboard/components/summary-card';
+import { RecentActivity } from '@/features/dashboard/components/recent-activity';
+import { ReminderCard } from '@/features/dashboard/components/reminder-card';
+import { WeddingProgress } from '@/features/dashboard/components/wedding-progress';
 
 export default function DashboardPage() {
-  const { data: user, isLoading } = useUser();
+  const { data: user, isLoading: isUserLoading } = useUser();
+  const { data: dashboard, isLoading: isDashboardLoading } = useDashboard();
   const token = useAuthStore((s) => s.token);
   const router = useRouter();
   const logout = useLogout();
 
   useEffect(() => {
-    if (!token && !isLoading) {
+    if (!token && !isUserLoading) {
       router.push('/login');
     }
-  }, [token, isLoading, router]);
+  }, [token, isUserLoading, router]);
 
-  if (isLoading) {
+  if (isUserLoading || isDashboardLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-gray-500">Loading...</p>
+        <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -31,13 +36,17 @@ export default function DashboardPage() {
     return null;
   }
 
+  const stats = dashboard?.statistics;
+  const upcoming = dashboard?.upcoming_events;
+  const activities = dashboard?.recent_activity ?? [];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white">
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <h1 className="text-xl font-bold text-gray-900">Nikago</h1>
+          <h1 className="text-xl font-bold text-card-foreground">Nikago</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user.name}</span>
+            <span className="text-sm text-muted-foreground">{user.name}</span>
             <Button
               variant="outline"
               size="sm"
@@ -50,10 +59,51 @@ export default function DashboardPage() {
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="mt-2 text-gray-600">
-          Welcome back, {user.name}! This is your wedding dashboard.
+        <h2 className="text-2xl font-bold text-foreground">
+          Welcome back, {user.name}
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Here&apos;s an overview of your wedding planning.
         </p>
+
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <SummaryCard
+            title="Guests"
+            value={stats?.guests_count ?? 0}
+            description="Total invited"
+          />
+          <SummaryCard
+            title="RSVP Confirmed"
+            value={stats?.rsvp_confirmed_count ?? 0}
+            description={`${stats?.rsvp_pending_count ?? 0} pending`}
+          />
+          <SummaryCard
+            title="Budget"
+            value={`$${(stats?.budget_spent ?? 0).toLocaleString()}`}
+            description={`of $${(stats?.budget_total ?? 0).toLocaleString()} total`}
+          />
+          <SummaryCard
+            title="Vendors"
+            value={stats?.vendors_count ?? 0}
+            description="Booked vendors"
+          />
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <WeddingProgress
+              daysRemaining={upcoming?.days_remaining ?? null}
+              weddingDate={upcoming?.wedding_date ?? null}
+            />
+          </div>
+          <div>
+            <ReminderCard reminders={upcoming?.reminders ?? []} />
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <RecentActivity activities={activities} />
+        </div>
       </main>
     </div>
   );

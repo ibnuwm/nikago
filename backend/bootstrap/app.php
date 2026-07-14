@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function (): void {
             Route::prefix('auth')->group(__DIR__ . '/../routes/auth.php');
+            Route::prefix('api')->group(__DIR__ . '/../routes/dashboard.php');
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {

@@ -63,3 +63,65 @@ export interface AuthResponse {
   user: User;
   token: string;
 }
+
+export interface DashboardStatistics {
+  invitations_count: number;
+  guests_count: number;
+  rsvp_pending_count: number;
+  rsvp_confirmed_count: number;
+  budget_total: number;
+  budget_spent: number;
+  vendors_count: number;
+}
+
+export interface RecentActivity {
+  id: string;
+  type: string;
+  title: string;
+  description: string | null;
+  created_at: string;
+}
+
+export interface TimelineEvent {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+}
+
+export interface Reminder {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+}
+
+export interface UpcomingEvents {
+  wedding_date: string | null;
+  days_remaining: number | null;
+  timeline_events: TimelineEvent[];
+  reminders: Reminder[];
+}
+
+export interface DashboardData {
+  user: User;
+  wedding: Wedding | null;
+  subscription: Subscription | null;
+  statistics: DashboardStatistics;
+  recent_activity: RecentActivity[];
+  upcoming_events: UpcomingEvents;
+}
+
+export interface Wedding {
+  id: string;
+  name: string;
+  date: string | null;
+  status: string;
+}
+
+export interface Subscription {
+  id: string;
+  plan: string;
+  status: string;
+  expires_at: string | null;
+}
