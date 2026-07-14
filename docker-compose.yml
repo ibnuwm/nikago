@@ -1,0 +1,131 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: nikago-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secret}
+      MYSQL_DATABASE: ${DB_DATABASE:-nikago}
+      MYSQL_USER: ${DB_USERNAME:-nikago}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - nikago-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: nikago-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - nikago-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 5
+
+  # Meilisearch
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    container_name: nikago-meilisearch
+    restart: unless-stopped
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_KEY:-master-key-change-me}
+      MEILI_ENV: development
+    volumes:
+      - meilisearch-data:/meili_data
+    networks:
+      - nikago-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health"]
+      timeout: 10s
+      retries: 5
+
+  # Backend (Laravel PHP-FPM)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nikago-backend
+    restart: unless-stopped
+    expose:
+      - "9000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-nikago}
+      DB_USERNAME: ${DB_USERNAME:-nikago}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_KEY: ${MEILISEARCH_KEY:-master-key-change-me}
+      SCOUT_DRIVER: meilisearch
+    networks:
+      - nikago-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nikago-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+      NEXT_PUBLIC_APP_NAME: Nikago
+    networks:
+      - nikago-network
+    depends_on:
+      - backend
+
+  # Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: nikago-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - nikago-network
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  nikago-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:
+  meilisearch-data:
