@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('api')->group(__DIR__ . '/../routes/wedding.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/invitation.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/template.php');
+            Route::prefix('api')->group(__DIR__ . '/../routes/rsvp.php');
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
