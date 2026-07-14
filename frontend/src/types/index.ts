@@ -114,9 +114,20 @@ export interface DashboardData {
 
 export interface Wedding {
   id: string;
-  name: string;
-  date: string | null;
+  title: string;
+  slug: string;
   status: string;
+  theme: string | null;
+  cover_image: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WeddingFormData {
+  title: string;
+  theme?: string | null;
+  cover_image?: string | null;
 }
 
 export interface Subscription {
