@@ -130,6 +130,27 @@ export interface WeddingFormData {
   cover_image?: string | null;
 }
 
+export interface Invitation {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  cover_image: string | null;
+  status: string;
+  published_at: string | null;
+  wedding_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InvitationFormData {
+  wedding_id: string;
+  title: string;
+  slug?: string;
+  cover_image?: string | null;
+  description?: string | null;
+}
+
 export interface Subscription {
   id: string;
   plan: string;
