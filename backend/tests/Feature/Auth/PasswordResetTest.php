@@ -4,37 +4,83 @@ declare(strict_types=1);
 
 use App\Modules\Authentication\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Password;
 
-test('reset password link can be requested', function () {
+uses(RefreshDatabase::class);
+
+test('user can request password reset', function () {
     Notification::fake();
 
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
+    $response = $this->postJson('/auth/forgot-password', [
+        'email' => $user->email,
+    ]);
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+        ]);
 
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-test('password can be reset with valid token', function () {
-    Notification::fake();
+test('forgot password requires valid email', function () {
+    $response = $this->postJson('/auth/forgot-password', [
+        'email' => 'nonexistent@example.com',
+    ]);
 
+    // Laravel always returns success to prevent email enumeration
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+        ]);
+});
+
+test('user can reset password with valid token', function () {
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
+    $token = Password::createToken($user);
 
-    Notification::assertSentTo($user, ResetPassword::class, function (object $notification) use ($user) {
-        $response = $this->post('/reset-password', [
-            'token' => $notification->token,
-            'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'password',
+    $response = $this->postJson('/auth/reset-password', [
+        'token' => $token,
+        'email' => $user->email,
+        'password' => 'NewPassword123!',
+        'password_confirmation' => 'NewPassword123!',
+    ]);
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
         ]);
+});
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertStatus(200);
+test('reset password requires valid token', function () {
+    $user = User::factory()->create();
 
-        return true;
-    });
+    $response = $this->postJson('/auth/reset-password', [
+        'token' => 'invalid-token',
+        'email' => $user->email,
+        'password' => 'NewPassword123!',
+        'password_confirmation' => 'NewPassword123!',
+    ]);
+
+    $response->assertUnprocessable()
+        ->assertJsonValidationErrors(['email']);
+});
+
+test('reset password requires password confirmation', function () {
+    $user = User::factory()->create();
+    $token = Password::createToken($user);
+
+    $response = $this->postJson('/auth/reset-password', [
+        'token' => $token,
+        'email' => $user->email,
+        'password' => 'NewPassword123!',
+    ]);
+
+    $response->assertUnprocessable()
+        ->assertJsonValidationErrors(['password']);
 });

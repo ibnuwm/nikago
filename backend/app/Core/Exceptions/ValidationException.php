@@ -27,11 +27,8 @@ class ValidationException extends DomainException
     {
         return response()->json([
             'success' => false,
-            'error' => [
-                'code' => $this->getErrorCode(),
-                'message' => $this->getMessage(),
-                'errors' => $this->errors,
-            ],
+            'message' => $this->getMessage(),
+            'errors' => $this->errors,
         ], $this->getStatusCode());
     }
 
