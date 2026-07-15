@@ -238,3 +238,42 @@ export interface CmsPage {
   created_at: string;
   updated_at: string;
 }
+
+export interface PlannerProgress {
+  progress: number;
+  completed_task: number;
+  total_task: number;
+}
+
+export interface PlannerSummary {
+  wedding_title: string | null;
+  wedding_status: string | null;
+  progress: number;
+  completed_task: number;
+  total_task: number;
+  guests_count: number;
+  checklist_count: number;
+  budget_total: number;
+  budget_spent: number;
+  timeline_count: number;
+  reminder_count: number;
+}
+
+export interface PlannerData {
+  wedding: Wedding | null;
+  progress: PlannerProgress;
+  summary: PlannerSummary;
+}
+
+export interface PlannerExportData {
+  wedding_title: string;
+  exported_at: string;
+  progress: PlannerProgress;
+  summary: PlannerSummary;
+}
+
+export interface AiPlannerData {
+  checklists: unknown[];
+  timelines: unknown[];
+  budgets: unknown[];
+}
