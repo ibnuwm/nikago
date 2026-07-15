@@ -277,3 +277,37 @@ export interface AiPlannerData {
   timelines: unknown[];
   budgets: unknown[];
 }
+
+export interface ChecklistItem {
+  id: string;
+  checklist_id: number;
+  title: string;
+  priority: 'low' | 'medium' | 'high';
+  due_date: string | null;
+  completed_at: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Checklist {
+  id: string;
+  wedding_id: number;
+  title: string;
+  description: string | null;
+  progress: number;
+  items?: ChecklistItem[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChecklistFormData {
+  wedding_id: number;
+  title: string;
+  description?: string | null;
+}
+
+export interface ReorderItem {
+  uuid: string;
+  sort_order: number;
+}
