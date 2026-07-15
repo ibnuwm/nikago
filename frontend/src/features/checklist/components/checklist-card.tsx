@@ -2,7 +2,6 @@
 
 import type { Checklist } from '@/types';
 import { ChecklistItemRow } from './checklist-item-row';
-import { cn } from '@/lib/utils';
 
 interface ChecklistCardProps {
   checklist: Checklist;

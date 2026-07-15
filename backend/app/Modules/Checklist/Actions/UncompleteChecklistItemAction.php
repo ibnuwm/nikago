@@ -6,7 +6,6 @@ namespace App\Modules\Checklist\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Checklist\Models\Checklist;
-use App\Modules\Checklist\Models\ChecklistItem;
 use Illuminate\Http\Request;
 
 class UncompleteChecklistItemAction extends Action
@@ -36,11 +35,7 @@ class UncompleteChecklistItemAction extends Action
 
         $item->update(['completed_at' => null]);
 
-        $total = $checklist->items()->count();
-        $completed = $checklist->items()->whereNotNull('completed_at')->count();
-        $progress = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
-
-        $checklist->update(['progress' => $progress]);
+        $checklist->recalculateProgress();
 
         return $checklist->fresh()->load(['items' => function ($query): void {
             $query->orderBy('sort_order');

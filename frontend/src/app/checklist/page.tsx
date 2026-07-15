@@ -1,6 +1,7 @@
 'use client';
 
 import { useUser } from '@/hooks/use-auth';
+import { useWeddings } from '@/features/wedding/hooks/use-weddings';
 import {
   useChecklists,
   useCreateChecklist,
@@ -18,10 +19,13 @@ import { useEffect, useState } from 'react';
 
 export default function ChecklistPage() {
   const { data: user, isLoading: isUserLoading } = useUser();
+  const { data: weddingsData, isLoading: isWeddingsLoading } = useWeddings();
   const { data: checklistsData, isLoading: isChecklistsLoading } = useChecklists();
   const token = useAuthStore((s) => s.token);
   const router = useRouter();
   const [showCreate, setShowCreate] = useState(false);
+
+  const weddingId = weddingsData?.data?.[0]?.id;
 
   const createChecklist = useCreateChecklist();
   const deleteChecklist = useDeleteChecklist();
@@ -38,7 +42,7 @@ export default function ChecklistPage() {
     }
   }, [token, isUserLoading, router]);
 
-  if (isUserLoading || isChecklistsLoading) {
+  if (isUserLoading || isWeddingsLoading || isChecklistsLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-sm text-muted-foreground">Loading...</p>
@@ -51,8 +55,9 @@ export default function ChecklistPage() {
   }
 
   const handleCreate = (title: string, description?: string) => {
+    if (!weddingId) return;
     createChecklist.mutate(
-      { wedding_id: 1, title, description },
+      { wedding_id: Number(weddingId), title, description },
       { onSuccess: () => setShowCreate(false) },
     );
   };

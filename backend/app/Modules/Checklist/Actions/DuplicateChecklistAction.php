@@ -8,7 +8,6 @@ use App\Core\Base\Action;
 use App\Modules\Checklist\Models\Checklist;
 use App\Modules\Checklist\Models\ChecklistItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class DuplicateChecklistAction extends Action
 {

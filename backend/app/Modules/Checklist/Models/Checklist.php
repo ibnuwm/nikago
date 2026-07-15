@@ -79,4 +79,14 @@ class Checklist extends Model
     {
         return $query->where('wedding_id', $weddingId);
     }
+
+    public function recalculateProgress(): void
+    {
+        $total = $this->items()->count();
+        $completed = $this->items()->whereNotNull('completed_at')->count();
+
+        $this->update([
+            'progress' => $total > 0 ? round(($completed / $total) * 100, 2) : 0,
+        ]);
+    }
 }
