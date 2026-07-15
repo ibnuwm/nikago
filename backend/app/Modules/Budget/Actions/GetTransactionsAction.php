@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Budget\Actions;
 
-use App\Modules\Budget\Models\BudgetCategory;
 use App\Modules\Budget\Models\BudgetTransaction;
 use App\Modules\Budget\Resources\BudgetTransactionResource;
 use Illuminate\Contracts\Auth\Authenticatable;
