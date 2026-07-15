@@ -82,6 +82,13 @@ class Guest extends Model
         return $this->hasOne(Rsvp::class);
     }
 
+    public function scopeForUser(Builder $query, int $userId): Builder
+    {
+        return $query->whereIn('wedding_id', function ($q) use ($userId): void {
+            $q->select('id')->from('weddings')->where('user_id', $userId);
+        });
+    }
+
     public function scopeForWedding(Builder $query, int $weddingId): Builder
     {
         return $query->where('wedding_id', $weddingId);

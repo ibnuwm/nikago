@@ -144,12 +144,4 @@ class WeddingController extends Controller
         ]);
     }
 
-    private function ensureUserIsActive(Request $request): void
-    {
-        $user = $request->user();
-
-        if ($user && ! $user->isActive()) {
-            abort(403, 'Your account is not active.');
-        }
-    }
 }

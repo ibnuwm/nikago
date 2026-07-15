@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Wedding\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Core\Base\Request;
 
-class UpdateWeddingRequest extends FormRequest
+class UpdateWeddingRequest extends Request
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [

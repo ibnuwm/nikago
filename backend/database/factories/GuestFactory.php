@@ -16,6 +16,7 @@ class GuestFactory extends Factory
         $name = fake()->name();
 
         return [
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
             'tenant_id' => 1,
             'wedding_id' => 1,
             'name' => $name,
@@ -23,6 +24,7 @@ class GuestFactory extends Factory
             'email' => fake()->optional()->safeEmail(),
             'address' => fake()->optional()->address(),
             'pax' => fake()->numberBetween(1, 5),
+            'qr_code' => (string) \Illuminate\Support\Str::uuid(),
             'status' => Guest::STATUS_ACTIVE,
         ];
     }

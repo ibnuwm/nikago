@@ -194,6 +194,39 @@ export interface CmsBanner {
   updated_at: string;
 }
 
+export interface Guest {
+  id: string;
+  wedding_id: number;
+  group_id: number | null;
+  category_id: number | null;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  pax: number;
+  qr_code: string | null;
+  invitation_sent_at: string | null;
+  status: string;
+  rsvp?: {
+    status: string;
+    total_guests: number;
+  } | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GuestFormData {
+  wedding_id: number;
+  group_id?: number | null;
+  category_id?: number | null;
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  address?: string | null;
+  pax?: number;
+  status?: string;
+}
+
 export interface CmsPage {
   id: string;
   title: string;
