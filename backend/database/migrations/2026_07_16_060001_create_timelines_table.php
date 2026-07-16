@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('uuid');
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('wedding_id');
+            $table->foreign('wedding_id')->references('id')->on('weddings')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('progress', 5, 2)->default(0);
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->unsignedBigInteger('timeline_id');
+            $table->softDeletes();
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('priority')->default('medium');

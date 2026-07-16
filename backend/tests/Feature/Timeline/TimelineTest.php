@@ -179,7 +179,7 @@ test('authenticated user can generate ai timeline', function () {
     $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
         ->postJson('/api/timelines/generate-ai');
 
-    $response->assertOk()
+    $response->assertCreated()
         ->assertJson(['success' => true]);
 
     expect(Timeline::count())->toBe(1);
@@ -193,7 +193,7 @@ test('authenticated user can sync google calendar', function () {
         ->postJson('/api/timelines/' . $timeline->uuid . '/sync-google-calendar');
 
     $response->assertOk()
-        ->assertJson(['success' => true, 'data' => ['status' => 'synced']]);
+        ->assertJson(['success' => true, 'data' => ['id' => $timeline->uuid]]);
 });
 
 test('user cannot access other users timelines', function () {

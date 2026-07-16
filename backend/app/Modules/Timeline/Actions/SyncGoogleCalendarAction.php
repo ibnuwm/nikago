@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class SyncGoogleCalendarAction extends Action
 {
-    public function execute(mixed ...$params): array
+    public function execute(mixed ...$params): ?Timeline
     {
         $request = $params[0];
         $uuid = $params[1];
@@ -25,17 +25,9 @@ class SyncGoogleCalendarAction extends Action
             ->first();
 
         if (! $timeline) {
-            return ['success' => false, 'message' => 'Timeline not found.'];
+            return null;
         }
 
-        return [
-            'success' => true,
-            'message' => 'Google Calendar sync initiated.',
-            'data' => [
-                'timeline_id' => $timeline->uuid,
-                'tasks_count' => $timeline->tasks->count(),
-                'status' => 'synced',
-            ],
-        ];
+        return $timeline;
     }
 }

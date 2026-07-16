@@ -26,12 +26,8 @@ class CompleteTimelineAction extends Action
         }
 
         if ($timeline->isCompleted()) {
-            $timeline->update([
-                'completed_at' => null,
-                'progress' => $timeline->tasks()->whereNotNull('completed_at')->count() > 0
-                    ? round(($timeline->tasks()->whereNotNull('completed_at')->count() / max($timeline->tasks()->count(), 1)) * 100, 2)
-                    : 0,
-            ]);
+            $timeline->update(['completed_at' => null]);
+            $timeline->recalculateProgress();
         } else {
             $timeline->update(['completed_at' => now(), 'progress' => 100]);
             $timeline->tasks()->whereNull('completed_at')->update(['completed_at' => now()]);

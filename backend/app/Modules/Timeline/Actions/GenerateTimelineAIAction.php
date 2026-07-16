@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class GenerateTimelineAIAction extends Action
 {
-    public function execute(mixed ...$params): array
+    public function execute(mixed ...$params): ?Timeline
     {
         $request = $params[0];
         $user = $request->user();
@@ -22,7 +22,7 @@ class GenerateTimelineAIAction extends Action
             ->first();
 
         if (! $wedding) {
-            return ['success' => false, 'message' => 'No wedding found.'];
+            return null;
         }
 
         $timeline = Timeline::create([
@@ -33,16 +33,16 @@ class GenerateTimelineAIAction extends Action
         ]);
 
         $tasks = [
-            ['title' => 'Book venue', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 0],
-            ['title' => 'Choose caterer', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 1],
-            ['title' => 'Select wedding dress', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 2],
-            ['title' => 'Book photographer', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 3],
-            ['title' => 'Hire makeup artist', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 4],
-            ['title' => 'Send invitations', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 5],
-            ['title' => 'Arrange decorations', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 6],
-            ['title' => 'Wedding rehearsal', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 7],
-            ['title' => 'Confirm guest list', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 8],
-            ['title' => 'Book honeymoon', 'priority' => TimelineTask::PRIORITY_LOW, 'duration_days' => 1, 'start_date' => null, 'due_date' => null, 'sort_order' => 9],
+            ['title' => 'Book venue', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'sort_order' => 0],
+            ['title' => 'Choose caterer', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'sort_order' => 1],
+            ['title' => 'Select wedding dress', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'sort_order' => 2],
+            ['title' => 'Book photographer', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'sort_order' => 3],
+            ['title' => 'Hire makeup artist', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'sort_order' => 4],
+            ['title' => 'Send invitations', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'sort_order' => 5],
+            ['title' => 'Arrange decorations', 'priority' => TimelineTask::PRIORITY_MEDIUM, 'duration_days' => 1, 'sort_order' => 6],
+            ['title' => 'Wedding rehearsal', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'sort_order' => 7],
+            ['title' => 'Confirm guest list', 'priority' => TimelineTask::PRIORITY_HIGH, 'duration_days' => 1, 'sort_order' => 8],
+            ['title' => 'Book honeymoon', 'priority' => TimelineTask::PRIORITY_LOW, 'duration_days' => 1, 'sort_order' => 9],
         ];
 
         foreach ($tasks as $taskData) {
@@ -55,11 +55,8 @@ class GenerateTimelineAIAction extends Action
             ]);
         }
 
-        return [
-            'success' => true,
-            'data' => $timeline->fresh()->load(['tasks' => function ($query): void {
-                $query->orderBy('sort_order');
-            }]),
-        ];
+        return $timeline->fresh()->load(['tasks' => function ($query): void {
+            $query->orderBy('sort_order');
+        }]);
     }
 }

@@ -151,13 +151,25 @@ class TimelineController extends Controller
     {
         $this->ensureUserIsActive($request);
 
-        return response()->json($action->execute($request));
+        $timeline = $action->execute($request);
+
+        if (! $timeline) {
+            return response()->json(['success' => false, 'message' => 'No wedding found.'], 404);
+        }
+
+        return response()->json(['success' => true, 'data' => new TimelineResource($timeline)], 201);
     }
 
     public function syncGoogleCalendar(Request $request, string $uuid, SyncGoogleCalendarAction $action): JsonResponse
     {
         $this->ensureUserIsActive($request);
 
-        return response()->json($action->execute($request, $uuid));
+        $timeline = $action->execute($request, $uuid);
+
+        if (! $timeline) {
+            return response()->json(['success' => false, 'message' => 'Timeline not found.'], 404);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Google Calendar sync initiated.', 'data' => new TimelineResource($timeline)]);
     }
 }

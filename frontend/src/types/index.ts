@@ -339,6 +339,64 @@ export interface Timeline {
   updated_at: string;
 }
 
+export interface SeatingTable {
+  id: string;
+  wedding_id: number;
+  name: string;
+  capacity: number;
+  shape?: string;
+  position_x?: number;
+  position_y?: number;
+  sort_order: number;
+  assigned_count: number;
+  guests?: SeatedGuest[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SeatedGuest {
+  id: string;
+  table_id: number;
+  guest_id: number;
+  guest_name?: string;
+  seat_number?: number;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SeatingTableFormData {
+  wedding_id: number;
+  name: string;
+  capacity?: number;
+  shape?: string;
+  position_x?: number;
+  position_y?: number;
+  sort_order?: number;
+}
+
+export interface SeatAssignmentFormData {
+  guest_id: string;
+  seat_number?: number;
+  notes?: string;
+}
+
+export interface SeatingPreview {
+  tables: {
+    id: string;
+    name: string;
+    capacity: number;
+    shape?: string;
+    position_x?: number;
+    position_y?: number;
+    assigned_count: number;
+    guests: { name?: string; seat_number?: number; notes?: string }[];
+  }[];
+  total_tables: number;
+  total_guests: number;
+  total_capacity: number;
+}
+
 export interface TimelineFormData {
   wedding_id: number;
   title: string;

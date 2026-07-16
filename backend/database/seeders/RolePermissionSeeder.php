@@ -100,6 +100,12 @@ class RolePermissionSeeder extends Seeder
             'analytics.view',
             'analytics.export',
 
+            // Seating management
+            'seatings.view',
+            'seatings.create',
+            'seatings.update',
+            'seatings.delete',
+
             // Notification management
             'notifications.view',
             'notifications.send',
@@ -159,6 +165,10 @@ class RolePermissionSeeder extends Seeder
                     'timelines.create',
                     'timelines.update',
                     'timelines.delete',
+                    'seatings.view',
+                    'seatings.create',
+                    'seatings.update',
+                    'seatings.delete',
                     'analytics.view',
                     'analytics.export',
                     'notifications.view',
@@ -183,6 +193,7 @@ class RolePermissionSeeder extends Seeder
                     'rsvps.manage',
                     'vendors.view',
                     'timelines.view',
+                    'seatings.view',
                     'analytics.view',
                     'notifications.view',
                     'notifications.send',
