@@ -13,9 +13,9 @@ class DeleteVendorPortfolioAction
 {
     public function execute(Authenticatable $user, string $vendorUuid, int $portfolioId): JsonResponse
     {
-        Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
+        $vendor = Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
 
-        $portfolio = VendorPortfolio::query()->findOrFail($portfolioId);
+        $portfolio = VendorPortfolio::query()->where('vendor_id', $vendor->id)->findOrFail($portfolioId);
         $portfolio->delete();
 
         return response()->json(['success' => true]);

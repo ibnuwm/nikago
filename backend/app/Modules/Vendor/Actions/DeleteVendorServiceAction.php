@@ -13,9 +13,9 @@ class DeleteVendorServiceAction
 {
     public function execute(Authenticatable $user, string $vendorUuid, int $serviceId): JsonResponse
     {
-        Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
+        $vendor = Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
 
-        $service = VendorService::query()->findOrFail($serviceId);
+        $service = VendorService::query()->where('vendor_id', $vendor->id)->findOrFail($serviceId);
         $service->delete();
 
         return response()->json(['success' => true]);

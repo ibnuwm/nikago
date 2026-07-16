@@ -14,9 +14,9 @@ class UpdateVendorServiceAction
 {
     public function execute(UpdateVendorServiceRequest $request, Authenticatable $user, string $vendorUuid, int $serviceId): VendorServiceResource
     {
-        Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
+        $vendor = Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
 
-        $service = VendorService::query()->findOrFail($serviceId);
+        $service = VendorService::query()->where('vendor_id', $vendor->id)->findOrFail($serviceId);
         $service->update($request->validated());
 
         return new VendorServiceResource($service->fresh());

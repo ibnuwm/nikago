@@ -143,9 +143,9 @@ class VendorController extends Controller
         ]);
     }
 
-    public function indexGalleries(Request $request, string $vendorUuid): AnonymousResourceCollection
+    public function indexGalleries(string $vendorUuid): AnonymousResourceCollection
     {
-        return $this->getVendorGalleriesAction->execute($request->user(), $vendorUuid);
+        return $this->getVendorGalleriesAction->execute($vendorUuid);
     }
 
     public function storeGallery(StoreVendorGalleryRequest $request, string $vendorUuid): JsonResponse
@@ -169,9 +169,9 @@ class VendorController extends Controller
         return $this->deleteVendorGalleryAction->execute($request->user(), $vendorUuid, $galleryId);
     }
 
-    public function indexPortfolios(Request $request, string $vendorUuid): AnonymousResourceCollection
+    public function indexPortfolios(string $vendorUuid): AnonymousResourceCollection
     {
-        return $this->getVendorPortfoliosAction->execute($request->user(), $vendorUuid);
+        return $this->getVendorPortfoliosAction->execute($vendorUuid);
     }
 
     public function storePortfolio(StoreVendorPortfolioRequest $request, string $vendorUuid): JsonResponse
@@ -195,9 +195,9 @@ class VendorController extends Controller
         return $this->deleteVendorPortfolioAction->execute($request->user(), $vendorUuid, $portfolioId);
     }
 
-    public function indexPackages(Request $request, string $vendorUuid): AnonymousResourceCollection
+    public function indexPackages(string $vendorUuid): AnonymousResourceCollection
     {
-        return $this->getVendorPackagesAction->execute($request->user(), $vendorUuid);
+        return $this->getVendorPackagesAction->execute($vendorUuid);
     }
 
     public function storePackage(StoreVendorPackageRequest $request, string $vendorUuid): JsonResponse
@@ -221,9 +221,9 @@ class VendorController extends Controller
         return $this->deleteVendorPackageAction->execute($request->user(), $vendorUuid, $packageId);
     }
 
-    public function indexServices(Request $request, string $vendorUuid): AnonymousResourceCollection
+    public function indexServices(string $vendorUuid): AnonymousResourceCollection
     {
-        return $this->getVendorServicesAction->execute($request->user(), $vendorUuid);
+        return $this->getVendorServicesAction->execute($vendorUuid);
     }
 
     public function storeService(StoreVendorServiceRequest $request, string $vendorUuid): JsonResponse

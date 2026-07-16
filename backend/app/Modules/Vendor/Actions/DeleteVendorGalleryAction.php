@@ -13,9 +13,9 @@ class DeleteVendorGalleryAction
 {
     public function execute(Authenticatable $user, string $vendorUuid, int $galleryId): JsonResponse
     {
-        Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
+        $vendor = Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
 
-        $gallery = VendorGallery::query()->findOrFail($galleryId);
+        $gallery = VendorGallery::query()->where('vendor_id', $vendor->id)->findOrFail($galleryId);
         $gallery->delete();
 
         return response()->json(['success' => true]);

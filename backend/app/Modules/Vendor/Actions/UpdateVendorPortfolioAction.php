@@ -14,9 +14,9 @@ class UpdateVendorPortfolioAction
 {
     public function execute(UpdateVendorPortfolioRequest $request, Authenticatable $user, string $vendorUuid, int $portfolioId): VendorPortfolioResource
     {
-        Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
+        $vendor = Vendor::query()->forUser($user->id)->where('uuid', $vendorUuid)->firstOrFail();
 
-        $portfolio = VendorPortfolio::query()->findOrFail($portfolioId);
+        $portfolio = VendorPortfolio::query()->where('vendor_id', $vendor->id)->findOrFail($portfolioId);
         $portfolio->update($request->validated());
 
         return new VendorPortfolioResource($portfolio->fresh());

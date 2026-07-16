@@ -536,3 +536,59 @@ test('user cannot manage other user galleries', function () {
 
     $response->assertStatus(404);
 });
+
+test('user cannot update gallery from other vendor using own vendor uuid', function () {
+    $otherUser = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+    $ownVendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $otherVendor = Vendor::factory()->create(['user_id' => $otherUser->id]);
+    $otherGallery = $otherVendor->galleries()->create(['image_url' => 'other.jpg']);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$ownVendor->uuid}/galleries/{$otherGallery->id}", [
+            'caption' => 'Should fail',
+        ]);
+
+    $response->assertStatus(404);
+});
+
+test('user cannot update portfolio from other vendor using own vendor uuid', function () {
+    $otherUser = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+    $ownVendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $otherVendor = Vendor::factory()->create(['user_id' => $otherUser->id]);
+    $otherPortfolio = $otherVendor->portfolios()->create(['title' => 'Other', 'image_url' => 'other.jpg']);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$ownVendor->uuid}/portfolios/{$otherPortfolio->id}", [
+            'title' => 'Should fail',
+        ]);
+
+    $response->assertStatus(404);
+});
+
+test('user cannot update package from other vendor using own vendor uuid', function () {
+    $otherUser = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+    $ownVendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $otherVendor = Vendor::factory()->create(['user_id' => $otherUser->id]);
+    $otherPackage = $otherVendor->packages()->create(['name' => 'Other', 'price' => 1000]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$ownVendor->uuid}/packages/{$otherPackage->id}", [
+            'name' => 'Should fail',
+        ]);
+
+    $response->assertStatus(404);
+});
+
+test('user cannot update service from other vendor using own vendor uuid', function () {
+    $otherUser = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+    $ownVendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $otherVendor = Vendor::factory()->create(['user_id' => $otherUser->id]);
+    $otherService = VendorService::factory()->create(['vendor_id' => $otherVendor->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$ownVendor->uuid}/services/{$otherService->id}", [
+            'name' => 'Should fail',
+        ]);
+
+    $response->assertStatus(404);
+});
