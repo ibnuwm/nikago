@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Vendor\Models;
 
+use App\Modules\Marketplace\Models\Wishlist;
 use Database\Factories\VendorFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -47,6 +48,8 @@ class Vendor extends Model
         'rating',
         'total_review',
         'verified_at',
+        'featured',
+        'featured_at',
     ];
 
     protected $attributes = [
@@ -61,6 +64,8 @@ class Vendor extends Model
             'rating' => 'decimal:2',
             'total_review' => 'integer',
             'verified_at' => 'datetime',
+            'featured' => 'boolean',
+            'featured_at' => 'datetime',
             'operating_hours' => 'array',
             'social_media' => 'array',
         ];
@@ -116,6 +121,11 @@ class Vendor extends Model
     public function verifications(): HasMany
     {
         return $this->hasMany(VendorVerification::class, 'vendor_id');
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class, 'vendor_id');
     }
 
     public function scopeForUser(Builder $query, int $userId): Builder
@@ -174,5 +184,29 @@ class Vendor extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', 'active');
+    }
+
+    public function scopeFeatured(Builder $query): Builder
+    {
+        return $query->where('featured', true);
+    }
+
+    public function scopePriceRange(Builder $query, ?float $min, ?float $max): Builder
+    {
+        if ($min === null && $max === null) {
+            return $query;
+        }
+
+        return $query->whereIn('id', function ($q) use ($min, $max): void {
+            $q->select('vendor_id')
+                ->from('vendor_packages');
+
+            if ($min !== null) {
+                $q->where('price', '>=', $min);
+            }
+            if ($max !== null) {
+                $q->where('price', '<=', $max);
+            }
+        });
     }
 }

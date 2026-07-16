@@ -468,6 +468,9 @@ export interface Vendor {
   rating: number;
   total_review: number;
   verified_at: string | null;
+  featured: boolean;
+  featured_at: string | null;
+  is_wishlisted?: boolean;
   services?: VendorService[];
   packages?: VendorPackage[];
   portfolios?: VendorPortfolio[];
@@ -512,4 +515,25 @@ export interface VendorFilters {
   min_rating?: number;
   sort?: string;
   direction?: string;
+}
+
+export interface Category {
+  name: string;
+  vendor_count: number;
+}
+
+export interface MarketplaceFilters {
+  category?: string;
+  city?: string;
+  min_rating?: number;
+  verified?: boolean;
+  min_price?: number;
+  max_price?: number;
+  sort?: string;
+  direction?: string;
+  per_page?: number;
+}
+
+export interface CompareRequest {
+  vendor_uuids: string[];
 }
