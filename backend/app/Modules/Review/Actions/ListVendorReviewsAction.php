@@ -20,7 +20,7 @@ class ListVendorReviewsAction
         $reviews = Review::query()
             ->where('vendor_id', $vendor->id)
             ->where('status', 'approved')
-            ->with(['images', 'user'])
+            ->with(['images', 'user', 'vendor', 'booking'])
             ->orderByDesc('created_at')
             ->paginate($perPage);
 

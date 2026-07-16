@@ -6,7 +6,6 @@ namespace App\Modules\Review\Actions;
 
 use App\Modules\Review\Models\Review;
 use App\Modules\Review\Resources\ReviewResource;
-use App\Modules\Vendor\Models\Vendor;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class ReplyToReviewAction
@@ -18,10 +17,9 @@ class ReplyToReviewAction
             ->with(['vendor', 'images'])
             ->firstOrFail();
 
-        $vendor = Vendor::query()
-            ->where('id', $review->vendor_id)
-            ->where('user_id', $user->id)
-            ->firstOrFail();
+        if ($review->vendor->user_id !== $user->id) {
+            abort(404);
+        }
 
         $review->reply = $data['reply'];
         $review->replied_at = now();

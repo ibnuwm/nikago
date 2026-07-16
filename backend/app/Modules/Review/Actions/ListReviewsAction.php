@@ -16,7 +16,7 @@ class ListReviewsAction
         $perPage = (int) ($params['per_page'] ?? 15);
 
         $reviews = Review::query()
-            ->where('user_id', $user->id)
+            ->forUser($user->id)
             ->with(['images', 'vendor', 'booking'])
             ->orderByDesc('created_at')
             ->paginate($perPage);

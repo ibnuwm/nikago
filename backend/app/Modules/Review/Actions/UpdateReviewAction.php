@@ -18,7 +18,7 @@ class UpdateReviewAction
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        if (isset($data['rating'])) {
+        if (array_key_exists('rating', $data)) {
             $review->rating = $data['rating'];
         }
 

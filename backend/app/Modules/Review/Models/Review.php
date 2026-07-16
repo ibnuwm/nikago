@@ -7,6 +7,7 @@ namespace App\Modules\Review\Models;
 use App\Modules\Booking\Models\Booking;
 use App\Modules\Vendor\Models\Vendor;
 use Database\Factories\Review\ReviewFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -94,5 +95,10 @@ class Review extends Model
     public function reports(): HasMany
     {
         return $this->hasMany(ReviewReport::class);
+    }
+
+    public function scopeForUser(Builder $query, int $userId): Builder
+    {
+        return $query->where('user_id', $userId);
     }
 }
