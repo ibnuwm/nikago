@@ -37,7 +37,7 @@ class VendorResource extends Resource
             'packages' => VendorPackageResource::collection(
                 $this->whenLoaded('packages')
             ),
-            'portfolios' => self::collection(
+            'portfolios' => VendorPortfolioResource::collection(
                 $this->whenLoaded('portfolios')
             ),
             'galleries' => VendorGalleryResource::collection(

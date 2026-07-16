@@ -134,7 +134,6 @@ export default function VendorPage() {
             <div className="mt-8 space-y-4">
               {view.type === 'create' && (
                 <CreateVendorForm
-                  weddingId={1}
                   onSubmit={handleCreate}
                   onCancel={() => setView({ type: 'list' })}
                 />

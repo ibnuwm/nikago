@@ -9,7 +9,6 @@ interface ServiceInput {
 }
 
 interface CreateVendorFormProps {
-  weddingId: number;
   onSubmit: (data: {
     business_name: string;
     description?: string;

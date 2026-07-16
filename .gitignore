@@ -3,6 +3,8 @@ node_modules/
 vendor/
 !backend/app/Modules/Vendor/
 !backend/tests/Feature/Vendor/
+!frontend/src/app/vendor/
+!frontend/src/features/vendor/
 
 # Environment files
 .env
