@@ -33,12 +33,16 @@ class Vendor extends Model
         'user_id',
         'business_name',
         'slug',
+        'logo',
+        'cover',
         'description',
         'phone',
         'email',
         'address',
         'city',
         'province',
+        'operating_hours',
+        'social_media',
         'status',
         'rating',
         'total_review',
@@ -57,6 +61,8 @@ class Vendor extends Model
             'rating' => 'decimal:2',
             'total_review' => 'integer',
             'verified_at' => 'datetime',
+            'operating_hours' => 'array',
+            'social_media' => 'array',
         ];
     }
 

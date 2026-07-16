@@ -261,3 +261,278 @@ test('user cannot update other user vendor', function () {
 
     $response->assertStatus(404);
 });
+
+test('authenticated user can update vendor profile with logo cover and hours', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$vendor->uuid}", [
+            'logo' => 'logos/logo.png',
+            'cover' => 'covers/cover.jpg',
+            'operating_hours' => [
+                'monday' => ['open' => '09:00', 'close' => '17:00'],
+                'tuesday' => ['open' => '09:00', 'close' => '17:00'],
+            ],
+            'social_media' => [
+                'instagram' => 'https://instagram.com/vendor',
+            ],
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.logo', 'logos/logo.png')
+        ->assertJsonPath('data.cover', 'covers/cover.jpg');
+
+    $vendor->refresh();
+    expect($vendor->operating_hours)->toBeArray();
+    expect($vendor->social_media)->toBeArray();
+    expect($vendor->social_media['instagram'])->toBe('https://instagram.com/vendor');
+});
+
+test('authenticated user can create gallery for their vendor', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->postJson("/api/vendors/{$vendor->uuid}/galleries", [
+            'image_url' => 'galleries/photo1.jpg',
+            'caption' => 'Wedding decoration',
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'success',
+            'data' => ['id', 'image_url', 'caption', 'sort_order'],
+        ]);
+
+    $this->assertDatabaseHas('vendor_galleries', [
+        'vendor_id' => $vendor->id,
+        'image_url' => 'galleries/photo1.jpg',
+    ]);
+});
+
+test('authenticated user can list galleries', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $vendor->galleries()->createMany([
+        ['image_url' => 'g1.jpg', 'sort_order' => 1],
+        ['image_url' => 'g2.jpg', 'sort_order' => 2],
+    ]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->getJson("/api/vendors/{$vendor->uuid}/galleries");
+
+    $response->assertStatus(200)
+        ->assertJsonCount(2, 'data');
+});
+
+test('authenticated user can update gallery', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $gallery = $vendor->galleries()->create(['image_url' => 'old.jpg']);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$vendor->uuid}/galleries/{$gallery->id}", [
+            'caption' => 'Updated caption',
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.caption', 'Updated caption');
+});
+
+test('authenticated user can delete gallery', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $gallery = $vendor->galleries()->create(['image_url' => 'old.jpg']);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->deleteJson("/api/vendors/{$vendor->uuid}/galleries/{$gallery->id}");
+
+    $response->assertStatus(200)->assertJson(['success' => true]);
+    $this->assertDatabaseMissing('vendor_galleries', ['id' => $gallery->id]);
+});
+
+test('authenticated user can create portfolio for their vendor', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->postJson("/api/vendors/{$vendor->uuid}/portfolios", [
+            'title' => 'Wedding at Grand Ballroom',
+            'description' => 'A beautiful wedding decoration',
+            'image_url' => 'portfolios/wedding1.jpg',
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'success',
+            'data' => ['id', 'title', 'image_url'],
+        ]);
+
+    $this->assertDatabaseHas('vendor_portfolios', [
+        'vendor_id' => $vendor->id,
+        'title' => 'Wedding at Grand Ballroom',
+    ]);
+});
+
+test('authenticated user can list portfolios', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $vendor->portfolios()->createMany([
+        ['title' => 'Project A', 'image_url' => 'a.jpg'],
+        ['title' => 'Project B', 'image_url' => 'b.jpg'],
+    ]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->getJson("/api/vendors/{$vendor->uuid}/portfolios");
+
+    $response->assertStatus(200)
+        ->assertJsonCount(2, 'data');
+});
+
+test('authenticated user can update portfolio', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $portfolio = $vendor->portfolios()->create(['title' => 'Old', 'image_url' => 'old.jpg']);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$vendor->uuid}/portfolios/{$portfolio->id}", [
+            'title' => 'Updated Portfolio',
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.title', 'Updated Portfolio');
+});
+
+test('authenticated user can delete portfolio', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $portfolio = $vendor->portfolios()->create(['title' => 'Old', 'image_url' => 'old.jpg']);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->deleteJson("/api/vendors/{$vendor->uuid}/portfolios/{$portfolio->id}");
+
+    $response->assertStatus(200)->assertJson(['success' => true]);
+    $this->assertDatabaseMissing('vendor_portfolios', ['id' => $portfolio->id]);
+});
+
+test('authenticated user can create package for their vendor', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->postJson("/api/vendors/{$vendor->uuid}/packages", [
+            'name' => 'Gold Package',
+            'description' => 'Complete wedding package',
+            'price' => 25000000,
+            'inclusions' => ['Dekorasi', 'Catering', 'Dokumentasi'],
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'success',
+            'data' => ['id', 'name', 'price', 'inclusions'],
+        ]);
+
+    $this->assertDatabaseHas('vendor_packages', [
+        'vendor_id' => $vendor->id,
+        'name' => 'Gold Package',
+    ]);
+});
+
+test('authenticated user can list packages', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $vendor->packages()->createMany([
+        ['name' => 'Basic', 'price' => 10000000],
+        ['name' => 'Premium', 'price' => 30000000],
+    ]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->getJson("/api/vendors/{$vendor->uuid}/packages");
+
+    $response->assertStatus(200)
+        ->assertJsonCount(2, 'data');
+});
+
+test('authenticated user can update package', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $package = $vendor->packages()->create(['name' => 'Old', 'price' => 1000]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$vendor->uuid}/packages/{$package->id}", [
+            'price' => 5000000,
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.price', 5000000);
+});
+
+test('authenticated user can delete package', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $package = $vendor->packages()->create(['name' => 'Old', 'price' => 1000]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->deleteJson("/api/vendors/{$vendor->uuid}/packages/{$package->id}");
+
+    $response->assertStatus(200)->assertJson(['success' => true]);
+    $this->assertDatabaseMissing('vendor_packages', ['id' => $package->id]);
+});
+
+test('authenticated user can create service for their vendor', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->postJson("/api/vendors/{$vendor->uuid}/services", [
+            'name' => 'Catering',
+            'description' => 'Full catering service',
+            'starting_price' => 15000000,
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'success',
+            'data' => ['id', 'name', 'starting_price'],
+        ]);
+
+    $this->assertDatabaseHas('vendor_services', [
+        'vendor_id' => $vendor->id,
+        'name' => 'Catering',
+    ]);
+});
+
+test('authenticated user can list services', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    VendorService::factory()->count(2)->create(['vendor_id' => $vendor->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->getJson("/api/vendors/{$vendor->uuid}/services");
+
+    $response->assertStatus(200)
+        ->assertJsonCount(2, 'data');
+});
+
+test('authenticated user can update service', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $service = VendorService::factory()->create(['vendor_id' => $vendor->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->putJson("/api/vendors/{$vendor->uuid}/services/{$service->id}", [
+            'name' => 'Updated Service',
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.name', 'Updated Service');
+});
+
+test('authenticated user can delete service', function () {
+    $vendor = Vendor::factory()->create(['user_id' => $this->user->id]);
+    $service = VendorService::factory()->create(['vendor_id' => $vendor->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->deleteJson("/api/vendors/{$vendor->uuid}/services/{$service->id}");
+
+    $response->assertStatus(200)->assertJson(['success' => true]);
+    $this->assertDatabaseMissing('vendor_services', ['id' => $service->id]);
+});
+
+test('user cannot manage other user galleries', function () {
+    $otherUser = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+    $vendor = Vendor::factory()->create(['user_id' => $otherUser->id]);
+
+    $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        ->postJson("/api/vendors/{$vendor->uuid}/galleries", [
+            'image_url' => 'hacked.jpg',
+        ]);
+
+    $response->assertStatus(404);
+});

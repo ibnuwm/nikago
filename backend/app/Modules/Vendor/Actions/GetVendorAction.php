@@ -12,7 +12,7 @@ class GetVendorAction
     public function execute(string $uuid): VendorResource
     {
         $vendor = Vendor::query()
-            ->with(['services', 'packages', 'portfolios', 'galleries'])
+            ->with(['services', 'packages', 'portfolios', 'galleries', 'teams'])
             ->where('uuid', $uuid)
             ->firstOrFail();
 

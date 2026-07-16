@@ -421,6 +421,35 @@ export interface VendorService {
   updated_at: string;
 }
 
+export interface VendorGallery {
+  id: number;
+  image_url: string;
+  caption: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorPortfolio {
+  id: number;
+  title: string;
+  description: string | null;
+  image_url: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorPackage {
+  id: number;
+  name: string;
+  description: string | null;
+  price: number;
+  inclusions: string[] | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Vendor {
   id: string;
   business_name: string;
@@ -431,11 +460,19 @@ export interface Vendor {
   address: string | null;
   city: string | null;
   province: string | null;
+  logo: string | null;
+  cover: string | null;
+  operating_hours: Record<string, { open: string; close: string }> | null;
+  social_media: Record<string, string> | null;
   status: string;
   rating: number;
   total_review: number;
   verified_at: string | null;
   services?: VendorService[];
+  packages?: VendorPackage[];
+  portfolios?: VendorPortfolio[];
+  galleries?: VendorGallery[];
+  teams?: unknown[];
   created_at: string;
   updated_at: string;
 }
@@ -448,6 +485,10 @@ export interface VendorFormData {
   address?: string | null;
   city?: string | null;
   province?: string | null;
+  logo?: string | null;
+  cover?: string | null;
+  operating_hours?: Record<string, { open: string; close: string }> | null;
+  social_media?: Record<string, string> | null;
   services?: { name: string; description?: string | null; starting_price?: number | null }[];
 }
 
