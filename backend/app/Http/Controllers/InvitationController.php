@@ -45,6 +45,13 @@ class InvitationController extends Controller
 
         $invitation = $action->execute($request);
 
+        if (! $invitation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Wedding not found.',
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
             'data' => new InvitationResource($invitation),
@@ -162,7 +169,7 @@ class InvitationController extends Controller
         return response()->json([
             'success' => true,
             'data' => new InvitationResource($invitation),
-        ], 201);
+        ]);
     }
 
     public function preview(Request $request, string $uuid, PreviewInvitationAction $action): JsonResponse

@@ -4,18 +4,28 @@ declare(strict_types=1);
 
 namespace App\Modules\Budget\Actions;
 
+use App\Core\Base\Action;
 use App\Modules\Budget\Models\Budget;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
-class DeleteBudgetAction
+class DeleteBudgetAction extends Action
 {
-    public function execute(Authenticatable $user, int $budgetId): JsonResponse
+    public function execute(mixed ...$params): bool
     {
-        $budget = Budget::query()->forUser($user->id)->findOrFail($budgetId);
+        $request = $params[0];
+        $budgetId = $params[1];
+        $user = $request->user();
+
+        $budget = Budget::query()
+            ->forUser($user->id)
+            ->find($budgetId);
+
+        if (! $budget) {
+            return false;
+        }
 
         $budget->delete();
 
-        return response()->json(['success' => true]);
+        return true;
     }
 }

@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\RSVP\Requests;
 
+use App\Core\Base\Request;
 use App\Modules\RSVP\Models\Rsvp;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRsvpRequest extends FormRequest
+class StoreRsvpRequest extends Request
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [

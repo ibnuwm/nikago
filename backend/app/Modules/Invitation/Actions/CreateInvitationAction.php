@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class CreateInvitationAction extends Action
 {
-    public function execute(mixed ...$params): Invitation
+    public function execute(mixed ...$params): ?Invitation
     {
         /** @var Request $request */
         $request = $params[0];
@@ -23,6 +23,10 @@ class CreateInvitationAction extends Action
             ->forUser($user->id)
             ->where('uuid', $request->input('wedding_id'))
             ->first();
+
+        if (! $wedding) {
+            return null;
+        }
 
         return Invitation::create([
             'tenant_id' => $user->tenant_id ?? 1,

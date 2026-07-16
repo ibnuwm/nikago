@@ -4,18 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Invitation\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Core\Base\Request;
 
-class UpdateInvitationRequest extends FormRequest
+class UpdateInvitationRequest extends Request
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [

@@ -88,7 +88,19 @@ class BudgetController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse
     {
-        return $this->deleteBudgetAction->execute($request->user(), $id);
+        $deleted = $this->deleteBudgetAction->execute($request, $id);
+
+        if (! $deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Budget not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Budget deleted successfully.',
+        ]);
     }
 
     public function summary(Request $request, int $id): JsonResponse
@@ -135,7 +147,19 @@ class BudgetController extends Controller
 
     public function destroyCategory(Request $request, int $budgetId, int $categoryId): JsonResponse
     {
-        return $this->deleteCategoryAction->execute($request->user(), $budgetId, $categoryId);
+        $deleted = $this->deleteCategoryAction->execute($request, $budgetId, $categoryId);
+
+        if (! $deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Budget or category not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Category deleted successfully.',
+        ]);
     }
 
     public function reorderCategories(Request $request, int $budgetId): JsonResponse
@@ -183,7 +207,19 @@ class BudgetController extends Controller
 
     public function destroyTransaction(Request $request, int $budgetId, int $transactionId): JsonResponse
     {
-        return $this->deleteTransactionAction->execute($request->user(), $budgetId, $transactionId);
+        $deleted = $this->deleteTransactionAction->execute($request, $budgetId, $transactionId);
+
+        if (! $deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Budget or transaction not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction deleted successfully.',
+        ]);
     }
 
     public function recalculate(Request $request, int $id): JsonResponse

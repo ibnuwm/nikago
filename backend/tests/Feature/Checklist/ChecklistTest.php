@@ -150,7 +150,7 @@ test('authenticated user can duplicate checklist', function () {
     $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
         ->postJson('/api/checklists/' . $checklist->uuid . '/duplicate');
 
-    $response->assertCreated()
+    $response->assertOk()
         ->assertJson(['success' => true]);
 
     expect(Checklist::count())->toBe(2);

@@ -143,7 +143,7 @@ class ChecklistController extends Controller
             return response()->json(['success' => false, 'message' => 'Checklist not found.'], 404);
         }
 
-        return response()->json(['success' => true, 'data' => new ChecklistResource($checklist)], 201);
+        return response()->json(['success' => true, 'data' => new ChecklistResource($checklist)]);
     }
 
     public function generateAi(Request $request, GenerateChecklistAIAction $action): JsonResponse

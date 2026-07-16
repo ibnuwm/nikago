@@ -339,7 +339,7 @@ test('authenticated user can duplicate invitation', function () {
     $response = $this->withHeader('Authorization', 'Bearer ' . $token)
         ->postJson("/api/invitations/{$invitation->uuid}/duplicate");
 
-    $response->assertCreated()
+    $response->assertOk()
         ->assertJson([
             'success' => true,
             'data' => [

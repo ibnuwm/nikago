@@ -4,20 +4,38 @@ declare(strict_types=1);
 
 namespace App\Modules\Budget\Actions;
 
+use App\Core\Base\Action;
 use App\Modules\Budget\Models\Budget;
 use App\Modules\Budget\Models\BudgetCategory;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
-class DeleteCategoryAction
+class DeleteCategoryAction extends Action
 {
-    public function execute(Authenticatable $user, int $budgetId, int $categoryId): JsonResponse
+    public function execute(mixed ...$params): bool
     {
-        Budget::query()->forUser($user->id)->findOrFail($budgetId);
+        $request = $params[0];
+        $budgetId = $params[1];
+        $categoryId = $params[2];
+        $user = $request->user();
 
-        $category = BudgetCategory::query()->where('budget_id', $budgetId)->findOrFail($categoryId);
+        $budget = Budget::query()
+            ->forUser($user->id)
+            ->find($budgetId);
+
+        if (! $budget) {
+            return false;
+        }
+
+        $category = BudgetCategory::query()
+            ->where('budget_id', $budgetId)
+            ->find($categoryId);
+
+        if (! $category) {
+            return false;
+        }
+
         $category->delete();
 
-        return response()->json(['success' => true]);
+        return true;
     }
 }
