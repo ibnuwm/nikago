@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         // Create default admin user
         User::factory()->create([
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
             'name' => 'Admin',
             'email' => 'admin@nikago.com',
         ]);

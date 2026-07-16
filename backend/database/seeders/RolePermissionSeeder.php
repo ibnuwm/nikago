@@ -74,6 +74,12 @@ class RolePermissionSeeder extends Seeder
             'payments.process',
             'payments.refund',
 
+            // Timeline management
+            'timelines.view',
+            'timelines.create',
+            'timelines.update',
+            'timelines.delete',
+
             // Subscription management
             'subscriptions.view',
             'subscriptions.manage',
@@ -108,6 +114,9 @@ class RolePermissionSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission);
         }
+
+        // Reset cache before assigning permissions to roles
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create roles
         $roles = [
@@ -146,6 +155,10 @@ class RolePermissionSeeder extends Seeder
                     'marketplace.delete',
                     'payments.view',
                     'payments.process',
+                    'timelines.view',
+                    'timelines.create',
+                    'timelines.update',
+                    'timelines.delete',
                     'analytics.view',
                     'analytics.export',
                     'notifications.view',
@@ -169,6 +182,7 @@ class RolePermissionSeeder extends Seeder
                     'rsvps.view',
                     'rsvps.manage',
                     'vendors.view',
+                    'timelines.view',
                     'analytics.view',
                     'notifications.view',
                     'notifications.send',

@@ -311,3 +311,45 @@ export interface ReorderItem {
   uuid: string;
   sort_order: number;
 }
+
+export interface TimelineTask {
+  id: string;
+  timeline_id: number;
+  title: string;
+  description: string | null;
+  priority: 'low' | 'medium' | 'high';
+  start_date: string | null;
+  due_date: string | null;
+  duration_days: number;
+  completed_at: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Timeline {
+  id: string;
+  wedding_id: number;
+  title: string;
+  description: string | null;
+  progress: number;
+  completed_at: string | null;
+  tasks?: TimelineTask[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TimelineFormData {
+  wedding_id: number;
+  title: string;
+  description?: string | null;
+  tasks?: {
+    title: string;
+    description?: string | null;
+    priority?: 'low' | 'medium' | 'high';
+    start_date?: string | null;
+    due_date?: string | null;
+    duration_days?: number;
+    sort_order?: number;
+  }[];
+}
