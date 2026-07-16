@@ -1,6 +1,8 @@
 # Dependencies
 node_modules/
 vendor/
+!backend/app/Modules/Vendor/
+!backend/tests/Feature/Vendor/
 
 # Environment files
 .env
