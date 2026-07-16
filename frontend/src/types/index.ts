@@ -537,3 +537,65 @@ export interface MarketplaceFilters {
 export interface CompareRequest {
   vendor_uuids: string[];
 }
+
+export interface BookingItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export interface BookingHistory {
+  id: number;
+  status_from: string | null;
+  status_to: string;
+  notes: string | null;
+  changed_by: number | null;
+  created_at: string;
+}
+
+export interface BookingDocument {
+  id: number;
+  type: string;
+  file_url: string;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface Booking {
+  id: string;
+  vendor_uuid: string | null;
+  vendor_name: string | null;
+  package_name: string | null;
+  package_price: number | null;
+  booking_date: string;
+  event_date: string;
+  subtotal: number;
+  discount: number;
+  total: number;
+  status: string;
+  notes: string | null;
+  vendor?: Vendor;
+  package?: VendorPackage;
+  items?: BookingItem[];
+  histories?: BookingHistory[];
+  documents?: BookingDocument[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BookingFormData {
+  vendor_uuid: string;
+  package_id: number;
+  event_date: string;
+  wedding_id: number;
+  notes?: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  vendor_name: string | null;
+  package_name: string | null;
+  event_date: string;
+  status: string;
+}
