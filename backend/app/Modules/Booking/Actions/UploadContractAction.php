@@ -6,6 +6,7 @@ namespace App\Modules\Booking\Actions;
 
 use App\Modules\Booking\Models\Booking;
 use App\Modules\Booking\Models\BookingDocument;
+use App\Modules\Booking\Resources\BookingDocumentResource;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 
@@ -27,7 +28,7 @@ class UploadContractAction
 
         return response()->json([
             'success' => true,
-            'data' => $document,
+            'data' => new BookingDocumentResource($document),
         ], 201);
     }
 }

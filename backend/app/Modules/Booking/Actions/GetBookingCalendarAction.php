@@ -7,12 +7,11 @@ namespace App\Modules\Booking\Actions;
 use App\Modules\Booking\Models\Booking;
 use App\Modules\Booking\Resources\BookingCalendarResource;
 use App\Modules\Vendor\Models\Vendor;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GetBookingCalendarAction
 {
-    public function execute(Authenticatable $user, array $params = []): AnonymousResourceCollection
+    public function execute(array $params = []): AnonymousResourceCollection
     {
         $vendorUuid = $params['vendor_uuid'] ?? null;
         $year = (int) ($params['year'] ?? now()->year);

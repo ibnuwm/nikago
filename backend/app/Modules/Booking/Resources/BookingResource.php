@@ -19,10 +19,10 @@ class BookingResource extends Resource
     {
         return [
             'id' => $this->resource->uuid,
-            'vendor_uuid' => $this->resource->vendor->uuid ?? null,
-            'vendor_name' => $this->resource->vendor->business_name ?? null,
-            'package_name' => $this->resource->package->name ?? null,
-            'package_price' => $this->resource->package->price ?? null,
+            'vendor_uuid' => $this->resource->vendor?->uuid,
+            'vendor_name' => $this->resource->vendor?->business_name,
+            'package_name' => $this->resource->package?->name,
+            'package_price' => $this->resource->package?->price,
             'booking_date' => $this->resource->booking_date instanceof Carbon
                 ? $this->resource->booking_date->toDateString()
                 : $this->resource->booking_date,

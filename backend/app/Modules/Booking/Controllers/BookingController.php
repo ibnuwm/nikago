@@ -104,7 +104,6 @@ class BookingController extends Controller
     public function calendar(Request $request): AnonymousResourceCollection
     {
         return $this->getBookingCalendarAction->execute(
-            $request->user(),
             $request->only(['vendor_uuid', 'year', 'month'])
         );
     }
