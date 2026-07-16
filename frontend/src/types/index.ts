@@ -411,3 +411,64 @@ export interface TimelineFormData {
     sort_order?: number;
   }[];
 }
+
+export interface VendorService {
+  id: number;
+  name: string;
+  description: string | null;
+  starting_price: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Vendor {
+  id: string;
+  business_name: string;
+  slug: string;
+  description: string | null;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  city: string | null;
+  province: string | null;
+  status: string;
+  rating: number;
+  total_review: number;
+  verified_at: string | null;
+  services?: VendorService[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorFormData {
+  business_name: string;
+  description?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  address?: string | null;
+  city?: string | null;
+  province?: string | null;
+  services?: { name: string; description?: string | null; starting_price?: number | null }[];
+}
+
+export interface VendorStatistics {
+  total_services: number;
+  total_packages: number;
+  total_portfolios: number;
+  total_galleries: number;
+  total_teams: number;
+  total_documents: number;
+  average_service_price: number | null;
+  rating: number;
+  total_review: number;
+  verified: boolean;
+}
+
+export interface VendorFilters {
+  search?: string;
+  category?: string;
+  verified?: boolean;
+  min_rating?: number;
+  sort?: string;
+  direction?: string;
+}
