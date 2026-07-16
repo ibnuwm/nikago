@@ -42,7 +42,7 @@ class MarketplaceController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         return $this->listMarketplaceVendorsAction->execute(
-            $request->only(['per_page', 'category', 'city', 'min_rating', 'verified', 'min_price', 'max_price', 'sort', 'direction', 'user'])
+            $request->only(['per_page', 'category', 'city', 'min_rating', 'verified', 'min_price', 'max_price', 'sort', 'direction'])
         );
     }
 

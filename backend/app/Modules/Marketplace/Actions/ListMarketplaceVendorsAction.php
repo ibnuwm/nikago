@@ -22,7 +22,6 @@ class ListMarketplaceVendorsAction
         $maxPrice = isset($params['max_price']) ? (float) $params['max_price'] : null;
         $sort = $params['sort'] ?? 'created_at';
         $direction = $params['direction'] ?? 'desc';
-        $user = $params['user'] ?? null;
 
         $query = Vendor::query()
             ->active()

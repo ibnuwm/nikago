@@ -13,13 +13,13 @@ class GetUserWishlistsAction
 {
     public function execute(Authenticatable $user): AnonymousResourceCollection
     {
-        $wishlists = Wishlist::query()
+        $items = Wishlist::query()
             ->where('user_id', $user->id)
             ->with('vendor.services')
             ->get();
 
-        $vendors = $wishlists->map(function ($wishlist) {
-            return $wishlist->vendor;
+        $vendors = $items->map(function ($item) {
+            return $item->vendor;
         });
 
         return MarketplaceVendorResource::collection($vendors);
