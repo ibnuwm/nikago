@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Vendor\Models;
 
 use App\Modules\Marketplace\Models\Wishlist;
+use App\Modules\Review\Models\Review;
 use Database\Factories\VendorFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -126,6 +127,22 @@ class Vendor extends Model
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class, 'vendor_id');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'vendor_id');
+    }
+
+    public function updateRating(): void
+    {
+        $this->rating = $this->reviews()
+            ->where('status', 'approved')
+            ->avg('rating') ?? 0;
+        $this->total_review = $this->reviews()
+            ->where('status', 'approved')
+            ->count();
+        $this->saveQuietly();
     }
 
     public function scopeForUser(Builder $query, int $userId): Builder

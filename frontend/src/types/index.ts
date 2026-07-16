@@ -599,3 +599,43 @@ export interface CalendarEvent {
   event_date: string;
   status: string;
 }
+
+export interface ReviewImage {
+  id: number;
+  image_url: string;
+  sort_order: number;
+}
+
+export interface Review {
+  id: string;
+  user_id: number;
+  user_name: string | null;
+  vendor_id: number;
+  vendor_uuid: string | null;
+  vendor_name: string | null;
+  booking_id: number;
+  booking_uuid: string | null;
+  rating: number;
+  review: string | null;
+  reply: string | null;
+  replied_at: string | null;
+  status: string;
+  images?: ReviewImage[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ReviewFormData {
+  booking_uuid: string;
+  rating: number;
+  review?: string | null;
+  images?: string[];
+}
+
+export interface ReviewReport {
+  id: string;
+  review_id: number;
+  reason: string;
+  status: string;
+  created_at: string;
+}
