@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Budget\Models\BudgetTransaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class BudgetTransactionFactory extends Factory
 {
@@ -14,7 +15,7 @@ class BudgetTransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'category_id' => 1,
             'type' => fake()->randomElement(BudgetTransaction::TYPES),
             'amount' => fake()->randomFloat(2, 10000, 5000000),

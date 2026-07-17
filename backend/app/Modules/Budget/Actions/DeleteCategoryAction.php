@@ -7,7 +7,6 @@ namespace App\Modules\Budget\Actions;
 use App\Core\Base\Action;
 use App\Modules\Budget\Models\Budget;
 use App\Modules\Budget\Models\BudgetCategory;
-use Illuminate\Http\Request;
 
 class DeleteCategoryAction extends Action
 {

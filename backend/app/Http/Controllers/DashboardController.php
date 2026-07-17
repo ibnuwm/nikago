@@ -51,5 +51,4 @@ class DashboardController extends Controller
             'data' => $action->execute(),
         ]);
     }
-
 }

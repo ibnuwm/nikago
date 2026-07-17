@@ -143,5 +143,4 @@ class WeddingController extends Controller
             'data' => new WeddingResource($wedding),
         ]);
     }
-
 }

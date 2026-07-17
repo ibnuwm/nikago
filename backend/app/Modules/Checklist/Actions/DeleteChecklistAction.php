@@ -6,7 +6,6 @@ namespace App\Modules\Checklist\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Checklist\Models\Checklist;
-use Illuminate\Http\Request;
 
 class DeleteChecklistAction extends Action
 {
@@ -26,6 +25,7 @@ class DeleteChecklistAction extends Action
         }
 
         $checklist->delete();
+
         return true;
     }
 }

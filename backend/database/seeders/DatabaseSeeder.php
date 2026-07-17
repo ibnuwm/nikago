@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Modules\Authentication\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,11 +20,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolePermissionSeeder::class,
+            CmsPageSeeder::class,
         ]);
 
         // Create default admin user
         User::factory()->create([
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'name' => 'Admin',
             'email' => 'admin@nikago.com',
         ]);

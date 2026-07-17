@@ -6,7 +6,6 @@ namespace App\Modules\Seating\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Seating\Models\SeatingTable;
-use Illuminate\Http\Request;
 
 class UpdateSeatingTableAction extends Action
 {

@@ -6,7 +6,6 @@ namespace App\Modules\Timeline\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Timeline\Models\Timeline;
-use Illuminate\Http\Request;
 
 class UncompleteTimelineTaskAction extends Action
 {

@@ -7,7 +7,6 @@ namespace App\Modules\Rundown\Actions;
 use App\Core\Base\Action;
 use App\Modules\Rundown\Models\Rundown;
 use App\Modules\Rundown\Models\RundownItem;
-use Illuminate\Http\Request;
 
 class UpdateRundownAction extends Action
 {

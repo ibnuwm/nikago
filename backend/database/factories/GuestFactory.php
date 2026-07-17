@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Guest\Models\Guest;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class GuestFactory extends Factory
 {
@@ -16,7 +17,7 @@ class GuestFactory extends Factory
         $name = fake()->name();
 
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'tenant_id' => 1,
             'wedding_id' => 1,
             'name' => $name,
@@ -24,7 +25,7 @@ class GuestFactory extends Factory
             'email' => fake()->optional()->safeEmail(),
             'address' => fake()->optional()->address(),
             'pax' => fake()->numberBetween(1, 5),
-            'qr_code' => (string) \Illuminate\Support\Str::uuid(),
+            'qr_code' => (string) Str::uuid(),
             'status' => Guest::STATUS_ACTIVE,
         ];
     }

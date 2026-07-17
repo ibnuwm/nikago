@@ -7,7 +7,6 @@ namespace App\Modules\Checklist\Actions;
 use App\Core\Base\Action;
 use App\Modules\Checklist\Models\Checklist;
 use App\Modules\Wedding\Models\Wedding;
-use Illuminate\Http\Request;
 
 class CreateChecklistAction extends Action
 {

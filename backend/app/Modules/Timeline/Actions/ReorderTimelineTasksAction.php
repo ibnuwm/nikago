@@ -7,7 +7,6 @@ namespace App\Modules\Timeline\Actions;
 use App\Core\Base\Action;
 use App\Modules\Timeline\Models\Timeline;
 use App\Modules\Timeline\Models\TimelineTask;
-use Illuminate\Http\Request;
 
 class ReorderTimelineTasksAction extends Action
 {

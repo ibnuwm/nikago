@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Seating\Models\SeatingTable;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class SeatingTableFactory extends Factory
 {
@@ -14,7 +15,7 @@ class SeatingTableFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'tenant_id' => 1,
             'wedding_id' => 1,
             'name' => fake()->word() . ' Table',

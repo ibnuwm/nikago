@@ -228,5 +228,4 @@ class GuestController extends Controller
             'data' => new GuestResource($guest),
         ]);
     }
-
 }

@@ -36,7 +36,7 @@ class CreateReviewAction
             'review' => $data['review'] ?? null,
         ]);
 
-        if (!empty($data['images'])) {
+        if (! empty($data['images'])) {
             foreach ($data['images'] as $sortOrder => $imageUrl) {
                 ReviewImage::query()->create([
                     'review_id' => $review->id,

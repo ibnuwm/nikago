@@ -140,5 +140,4 @@ class TemplateController extends Controller
             'message' => 'Template unfavorited successfully.',
         ]);
     }
-
 }

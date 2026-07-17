@@ -6,7 +6,6 @@ namespace App\Modules\Guest\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Guest\Models\Guest;
-use Illuminate\Http\Request;
 
 class GetGuestAction extends Action
 {

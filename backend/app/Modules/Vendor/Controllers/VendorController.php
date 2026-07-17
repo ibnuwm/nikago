@@ -18,10 +18,10 @@ use App\Modules\Vendor\Actions\DeleteVendorPackageAction;
 use App\Modules\Vendor\Actions\DeleteVendorPortfolioAction;
 use App\Modules\Vendor\Actions\DeleteVendorServiceAction;
 use App\Modules\Vendor\Actions\GetVendorAction;
-use App\Modules\Vendor\Actions\GetVendorsAction;
 use App\Modules\Vendor\Actions\GetVendorGalleriesAction;
 use App\Modules\Vendor\Actions\GetVendorPackagesAction;
 use App\Modules\Vendor\Actions\GetVendorPortfoliosAction;
+use App\Modules\Vendor\Actions\GetVendorsAction;
 use App\Modules\Vendor\Actions\GetVendorServicesAction;
 use App\Modules\Vendor\Actions\GetVendorStatisticsAction;
 use App\Modules\Vendor\Actions\UpdateVendorAction;
@@ -41,8 +41,8 @@ use App\Modules\Vendor\Requests\UpdateVendorPortfolioRequest;
 use App\Modules\Vendor\Requests\UpdateVendorRequest;
 use App\Modules\Vendor\Requests\UpdateVendorServiceRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class VendorController extends Controller
 {

@@ -6,7 +6,6 @@ namespace App\Modules\Planner\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Wedding\Models\Wedding;
-use Illuminate\Http\Request;
 
 class ExportPlannerAction extends Action
 {

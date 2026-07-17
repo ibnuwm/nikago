@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Checklist\Models\ChecklistItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ChecklistItemFactory extends Factory
 {
@@ -14,7 +15,7 @@ class ChecklistItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'checklist_id' => 1,
             'title' => fake()->sentence(4),
             'priority' => fake()->randomElement(ChecklistItem::PRIORITIES),

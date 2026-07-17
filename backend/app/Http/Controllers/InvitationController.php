@@ -190,5 +190,4 @@ class InvitationController extends Controller
             'data' => new InvitationResource($invitation),
         ]);
     }
-
 }

@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Timeline\Models\TimelineTask;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class TimelineTaskFactory extends Factory
 {
@@ -14,7 +15,7 @@ class TimelineTaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'timeline_id' => 1,
             'title' => fake()->sentence(4),
             'description' => fake()->optional()->paragraph(),

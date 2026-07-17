@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Budget\Models\Budget;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class BudgetFactory extends Factory
 {
@@ -14,7 +15,7 @@ class BudgetFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'tenant_id' => 1,
             'wedding_id' => 1,
             'title' => fake()->sentence(3),

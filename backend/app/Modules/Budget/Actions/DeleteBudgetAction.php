@@ -6,7 +6,6 @@ namespace App\Modules\Budget\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Budget\Models\Budget;
-use Illuminate\Http\Request;
 
 class DeleteBudgetAction extends Action
 {

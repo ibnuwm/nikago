@@ -17,6 +17,7 @@ class CmsPageFactory extends Factory
         $title = fake()->sentence();
 
         return [
+            'type' => 'page',
             'title' => $title,
             'slug' => Str::slug($title),
             'content' => fake()->paragraphs(3, true),
@@ -32,6 +33,24 @@ class CmsPageFactory extends Factory
         return $this->state(fn (array $attributes): array => [
             'status' => 'published',
             'is_published' => true,
+        ]);
+    }
+
+    public function terms(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => 'terms',
+            'title' => 'Terms of Service',
+            'slug' => 'terms-of-service',
+        ]);
+    }
+
+    public function privacyPolicy(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => 'privacy_policy',
+            'title' => 'Privacy Policy',
+            'slug' => 'privacy-policy',
         ]);
     }
 }

@@ -9,6 +9,8 @@ use App\Modules\CMS\Actions\GetBannersAction;
 use App\Modules\CMS\Actions\GetFaqsAction;
 use App\Modules\CMS\Actions\GetPageBySlugAction;
 use App\Modules\CMS\Actions\GetPagesAction;
+use App\Modules\CMS\Actions\GetPrivacyPolicyAction;
+use App\Modules\CMS\Actions\GetTermsAction;
 use App\Modules\CMS\Resources\BannerResource;
 use App\Modules\CMS\Resources\FaqResource;
 use App\Modules\CMS\Resources\PageResource;
@@ -61,6 +63,40 @@ class CmsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Page not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => new PageResource($page),
+        ]);
+    }
+
+    public function terms(GetTermsAction $action): JsonResponse
+    {
+        $page = $action->execute();
+
+        if (! $page) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terms not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => new PageResource($page),
+        ]);
+    }
+
+    public function privacyPolicy(GetPrivacyPolicyAction $action): JsonResponse
+    {
+        $page = $action->execute();
+
+        if (! $page) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Privacy policy not found.',
             ], 404);
         }
 

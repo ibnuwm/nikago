@@ -8,7 +8,6 @@ use App\Core\Base\Action;
 use App\Modules\Guest\Models\Guest;
 use App\Modules\Seating\Models\SeatingAssignment;
 use App\Modules\Seating\Models\SeatingTable;
-use Illuminate\Http\Request;
 
 class AutoGenerateSeatingAction extends Action
 {

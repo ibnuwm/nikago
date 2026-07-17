@@ -7,7 +7,6 @@ namespace App\Modules\Guest\Actions;
 use App\Core\Base\Action;
 use App\Modules\Guest\Models\Guest;
 use App\Modules\Wedding\Models\Wedding;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ImportGuestsAction extends Action

@@ -23,7 +23,9 @@ class SeatingTable extends Model
     use SoftDeletes;
 
     public const SHAPE_ROUND = 'round';
+
     public const SHAPE_RECTANGLE = 'rectangle';
+
     public const SHAPE_SQUARE = 'square';
 
     public const SHAPES = [

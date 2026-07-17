@@ -8,7 +8,6 @@ use App\Core\Base\Action;
 use App\Modules\Timeline\Models\Timeline;
 use App\Modules\Timeline\Models\TimelineTask;
 use App\Modules\Wedding\Models\Wedding;
-use Illuminate\Http\Request;
 
 class CreateTimelineAction extends Action
 {

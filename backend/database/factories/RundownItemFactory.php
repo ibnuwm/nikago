@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Modules\Rundown\Models\RundownItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class RundownItemFactory extends Factory
 {
@@ -14,7 +15,7 @@ class RundownItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => (string) Str::uuid(),
             'rundown_id' => 1,
             'title' => fake()->sentence(3),
             'description' => fake()->optional()->paragraph(),

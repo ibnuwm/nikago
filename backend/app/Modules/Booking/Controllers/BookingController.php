@@ -18,7 +18,6 @@ use App\Modules\Booking\Actions\UploadContractAction;
 use App\Modules\Booking\Requests\StoreBookingRequest;
 use App\Modules\Booking\Requests\StoreContractRequest;
 use App\Modules\Booking\Requests\UpdateBookingRequest;
-use App\Modules\Booking\Resources\BookingResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

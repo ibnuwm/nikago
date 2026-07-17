@@ -6,7 +6,6 @@ namespace App\Modules\Seating\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Seating\Models\SeatingAssignment;
-use Illuminate\Http\Request;
 
 class UnassignGuestAction extends Action
 {

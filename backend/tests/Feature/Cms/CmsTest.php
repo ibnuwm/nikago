@@ -143,3 +143,69 @@ test('slug with special characters returns 422', function () {
 
     $response->assertStatus(422);
 });
+
+test('anyone can get terms', function () {
+    $page = Page::factory()->published()->terms()->create();
+
+    $response = $this->getJson('/api/cms/terms');
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+            'data' => [
+                'id' => $page->uuid,
+                'slug' => 'terms-of-service',
+            ],
+        ]);
+});
+
+test('terms returns 404 when not set', function () {
+    $response = $this->getJson('/api/cms/terms');
+
+    $response->assertNotFound();
+});
+
+test('unpublished terms are not returned', function () {
+    Page::factory()->terms()->create(['is_published' => false]);
+
+    $response = $this->getJson('/api/cms/terms');
+
+    $response->assertNotFound();
+});
+
+test('anyone can get privacy policy', function () {
+    $page = Page::factory()->published()->privacyPolicy()->create();
+
+    $response = $this->getJson('/api/cms/privacy-policy');
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+            'data' => [
+                'id' => $page->uuid,
+                'slug' => 'privacy-policy',
+            ],
+        ]);
+});
+
+test('privacy policy returns 404 when not set', function () {
+    $response = $this->getJson('/api/cms/privacy-policy');
+
+    $response->assertNotFound();
+});
+
+test('unpublished privacy policy is not returned', function () {
+    Page::factory()->privacyPolicy()->create(['is_published' => false]);
+
+    $response = $this->getJson('/api/cms/privacy-policy');
+
+    $response->assertNotFound();
+});
+
+test('regular pages are not returned as terms', function () {
+    Page::factory()->published()->create();
+
+    $response = $this->getJson('/api/cms/terms');
+
+    $response->assertNotFound();
+});

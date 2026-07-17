@@ -17,7 +17,9 @@ class ChecklistItem extends Model
     use HasFactory;
 
     public const PRIORITY_LOW = 'low';
+
     public const PRIORITY_MEDIUM = 'medium';
+
     public const PRIORITY_HIGH = 'high';
 
     public const PRIORITIES = [

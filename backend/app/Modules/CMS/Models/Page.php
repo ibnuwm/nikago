@@ -27,6 +27,7 @@ class Page extends Model
     protected $table = 'cms_pages';
 
     protected $fillable = [
+        'type',
         'title',
         'slug',
         'content',
@@ -60,5 +61,10 @@ class Page extends Model
     public function scopeBySlug(Builder $query, string $slug): Builder
     {
         return $query->where('slug', $slug);
+    }
+
+    public function scopeByType(Builder $query, string $type): Builder
+    {
+        return $query->where('type', $type);
     }
 }

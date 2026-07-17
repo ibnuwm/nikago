@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Vendor\Requests;
 
 use App\Core\Base\Request;
-use Illuminate\Validation\Rule;
 
 class StoreVendorRequest extends Request
 {

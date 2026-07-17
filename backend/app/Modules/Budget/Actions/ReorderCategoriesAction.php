@@ -12,7 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 class ReorderCategoriesAction
 {
     /**
-     * @param array<int, int> $order
+     * @param  array<int, int>  $order
      */
     public function execute(Authenticatable $user, int $budgetId, array $order): BudgetResource
     {

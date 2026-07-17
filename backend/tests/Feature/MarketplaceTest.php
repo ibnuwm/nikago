@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use App\Modules\Authentication\Models\User;
+use App\Modules\Marketplace\Models\Wishlist;
 use App\Modules\Vendor\Models\Vendor;
 use App\Modules\Vendor\Models\VendorPackage;
 use App\Modules\Vendor\Models\VendorService;
-use App\Modules\Marketplace\Models\Wishlist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);

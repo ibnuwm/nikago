@@ -6,7 +6,6 @@ namespace App\Modules\Rundown\Actions;
 
 use App\Core\Base\Action;
 use App\Modules\Rundown\Models\Rundown;
-use Illuminate\Http\Request;
 
 class ExportRundownAction extends Action
 {
