@@ -18,12 +18,18 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class TermsResource extends Resource
 {
     protected static ?string $model = Page::class;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return 'CMS';
+    }
 
     public static function getNavigationIcon(): string|BackedEnum|null
     {
