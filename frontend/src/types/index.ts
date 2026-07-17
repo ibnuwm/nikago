@@ -239,6 +239,49 @@ export interface CmsPage {
   updated_at: string;
 }
 
+export interface BlogAuthor {
+  id: string;
+  name: string;
+  avatar: string | null;
+}
+
+export interface BlogCategoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  post_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogTagItem {
+  id: string;
+  name: string;
+  slug: string;
+  post_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string | null;
+  featured_image: string | null;
+  author: BlogAuthor | null;
+  category: { id: string; name: string; slug: string } | null;
+  tags: { id: string; name: string; slug: string }[];
+  status: string;
+  published_at: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface PlannerProgress {
   progress: number;
   completed_task: number;

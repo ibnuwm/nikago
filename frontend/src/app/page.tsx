@@ -259,6 +259,14 @@ export default function LandingPage() {
                     Pricing
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/blog"
+                    className="text-sm text-muted-foreground hover:text-card-foreground"
+                  >
+                    Blog
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>

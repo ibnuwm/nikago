@@ -6,15 +6,23 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use App\Modules\CMS\Actions\GetBannersAction;
+use App\Modules\CMS\Actions\GetBlogCategoriesAction;
+use App\Modules\CMS\Actions\GetBlogPostBySlugAction;
+use App\Modules\CMS\Actions\GetBlogPostsAction;
+use App\Modules\CMS\Actions\GetBlogTagsAction;
 use App\Modules\CMS\Actions\GetFaqsAction;
 use App\Modules\CMS\Actions\GetPageBySlugAction;
 use App\Modules\CMS\Actions\GetPagesAction;
 use App\Modules\CMS\Actions\GetPrivacyPolicyAction;
 use App\Modules\CMS\Actions\GetTermsAction;
 use App\Modules\CMS\Resources\BannerResource;
+use App\Modules\CMS\Resources\BlogCategoryResource;
+use App\Modules\CMS\Resources\BlogPostResource;
+use App\Modules\CMS\Resources\BlogTagResource;
 use App\Modules\CMS\Resources\FaqResource;
 use App\Modules\CMS\Resources\PageResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CmsController extends Controller
 {
@@ -103,6 +111,66 @@ class CmsController extends Controller
         return response()->json([
             'success' => true,
             'data' => new PageResource($page),
+        ]);
+    }
+
+    public function blogPosts(Request $request, GetBlogPostsAction $action): JsonResponse
+    {
+        $posts = $action->execute($request);
+
+        return response()->json([
+            'success' => true,
+            'data' => BlogPostResource::collection($posts),
+            'meta' => [
+                'current_page' => $posts->currentPage(),
+                'last_page' => $posts->lastPage(),
+                'per_page' => $posts->perPage(),
+                'total' => $posts->total(),
+            ],
+        ]);
+    }
+
+    public function blogPostBySlug(string $slug, GetBlogPostBySlugAction $action): JsonResponse
+    {
+        if (! preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid blog slug format.',
+            ], 422);
+        }
+
+        $post = $action->execute($slug);
+
+        if (! $post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Blog post not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => new BlogPostResource($post),
+        ]);
+    }
+
+    public function blogCategories(GetBlogCategoriesAction $action): JsonResponse
+    {
+        $categories = $action->execute();
+
+        return response()->json([
+            'success' => true,
+            'data' => BlogCategoryResource::collection($categories),
+        ]);
+    }
+
+    public function blogTags(GetBlogTagsAction $action): JsonResponse
+    {
+        $tags = $action->execute();
+
+        return response()->json([
+            'success' => true,
+            'data' => BlogTagResource::collection($tags),
         ]);
     }
 }

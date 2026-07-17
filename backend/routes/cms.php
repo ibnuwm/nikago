@@ -23,4 +23,16 @@ Route::prefix('cms')->middleware('throttle:120,1')->group(function (): void {
 
     Route::get('/privacy-policy', [CmsController::class, 'privacyPolicy'])
         ->name('cms.privacy-policy');
+
+    Route::get('/blog/posts', [CmsController::class, 'blogPosts'])
+        ->name('cms.blog.posts');
+
+    Route::get('/blog/posts/{slug}', [CmsController::class, 'blogPostBySlug'])
+        ->name('cms.blog.posts.show');
+
+    Route::get('/blog/categories', [CmsController::class, 'blogCategories'])
+        ->name('cms.blog.categories');
+
+    Route::get('/blog/tags', [CmsController::class, 'blogTags'])
+        ->name('cms.blog.tags');
 });
