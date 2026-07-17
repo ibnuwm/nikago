@@ -106,6 +106,13 @@ class RolePermissionSeeder extends Seeder
             'seatings.update',
             'seatings.delete',
 
+            // Rundown management
+            'rundowns.view',
+            'rundowns.create',
+            'rundowns.update',
+            'rundowns.delete',
+            'rundowns.publish',
+
             // Notification management
             'notifications.view',
             'notifications.send',
@@ -169,6 +176,11 @@ class RolePermissionSeeder extends Seeder
                     'seatings.create',
                     'seatings.update',
                     'seatings.delete',
+                    'rundowns.view',
+                    'rundowns.create',
+                    'rundowns.update',
+                    'rundowns.delete',
+                    'rundowns.publish',
                     'analytics.view',
                     'analytics.export',
                     'notifications.view',
@@ -194,6 +206,7 @@ class RolePermissionSeeder extends Seeder
                     'vendors.view',
                     'timelines.view',
                     'seatings.view',
+                    'rundowns.view',
                     'analytics.view',
                     'notifications.view',
                     'notifications.send',
