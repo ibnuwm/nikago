@@ -35,4 +35,7 @@ Route::prefix('cms')->middleware('throttle:120,1')->group(function (): void {
 
     Route::get('/blog/tags', [CmsController::class, 'blogTags'])
         ->name('cms.blog.tags');
+
+    Route::get('/sitemap', [CmsController::class, 'sitemap'])
+        ->name('cms.sitemap');
 });

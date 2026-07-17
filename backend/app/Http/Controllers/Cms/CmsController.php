@@ -14,6 +14,7 @@ use App\Modules\CMS\Actions\GetFaqsAction;
 use App\Modules\CMS\Actions\GetPageBySlugAction;
 use App\Modules\CMS\Actions\GetPagesAction;
 use App\Modules\CMS\Actions\GetPrivacyPolicyAction;
+use App\Modules\CMS\Actions\GetSitemapUrlsAction;
 use App\Modules\CMS\Actions\GetTermsAction;
 use App\Modules\CMS\Resources\BannerResource;
 use App\Modules\CMS\Resources\BlogCategoryResource;
@@ -171,6 +172,16 @@ class CmsController extends Controller
         return response()->json([
             'success' => true,
             'data' => BlogTagResource::collection($tags),
+        ]);
+    }
+
+    public function sitemap(GetSitemapUrlsAction $action): JsonResponse
+    {
+        $urls = $action->execute();
+
+        return response()->json([
+            'success' => true,
+            'data' => $urls,
         ]);
     }
 }
