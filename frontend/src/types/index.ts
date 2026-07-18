@@ -859,3 +859,79 @@ export interface CrmStatistics {
   won_value: number;
   conversion_rate: number;
 }
+
+export interface AiMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
+export interface AiChatRequest {
+  messages: AiMessage[];
+  model?: string;
+  temperature?: number;
+}
+
+export interface AiChatResponse {
+  content: string;
+  model: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+export interface AiGenerateRequest {
+  prompt: string;
+  model?: string;
+}
+
+export interface AiGenerateResponse {
+  content: string;
+  model: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+export interface AiHistoryItem {
+  id: string;
+  feature: string;
+  prompt: string;
+  response: string | null;
+  model: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  created_at: string | null;
+}
+
+export interface AiModel {
+  id: string;
+  name: string;
+  description: string;
+  context_length: number;
+  pricing: {
+    prompt: number;
+    completion: number;
+  };
+}
+
+export interface AiUsage {
+  total_tokens: number;
+  total_cost: number;
+  total_requests: number;
+  usage_by_feature: Array<{
+    feature: string;
+    total_tokens: number;
+    cost: number;
+    requests: number;
+  }>;
+}
+
+export interface AiContext {
+  weddingDate?: string;
+  guestCount?: number;
+  budget?: number;
+  partnerName1?: string;
+  partnerName2?: string;
+  theme?: string;
+  location?: string;
+}
