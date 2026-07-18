@@ -935,3 +935,122 @@ export interface AiContext {
   theme?: string;
   location?: string;
 }
+
+export interface AnalyticsDashboard {
+  total_users: number;
+  active_users: number;
+  new_users: number;
+  total_vendors: number;
+  verified_vendors: number;
+  total_revenue: number;
+  mrr: number;
+  arr: number;
+  active_subscriptions: number;
+  total_ai_tokens: number;
+  total_ai_cost: number;
+  growth: {
+    revenue: number;
+    revenue_percentage: number;
+  };
+}
+
+export interface AnalyticsInvitation {
+  total_invitations: number;
+  published: number;
+  draft: number;
+  by_status: Record<string, number>;
+  trend: AnalyticsTrend[];
+}
+
+export interface AnalyticsRsvp {
+  total_guests: number;
+  total_rsvps: number;
+  confirmed: number;
+  declined: number;
+  maybe: number;
+  rsvp_rate: number;
+  by_attendance: Record<string, number>;
+  trend: AnalyticsTrend[];
+}
+
+export interface AnalyticsGuest {
+  total_guests: number;
+  invited: number;
+  not_invited: number;
+  by_status: Record<string, number>;
+  trend: AnalyticsTrend[];
+}
+
+export interface AnalyticsVendor {
+  total_vendors: number;
+  active: number;
+  inactive: number;
+  verified: number;
+  featured: number;
+  average_rating: number;
+  new_vendors: number;
+  vendor_density: number;
+  by_city: Record<string, number>;
+  trend: AnalyticsTrend[];
+}
+
+export interface AnalyticsSubscription {
+  total_subscriptions: number;
+  active: number;
+  expired: number;
+  cancelled: number;
+  trialing: number;
+  new_subscriptions: number;
+  churn_rate: number;
+  mrr: number;
+  arr: number;
+  by_plan: Array<{ plan: string; count: number }>;
+  trend: AnalyticsTrend[];
+}
+
+export interface AnalyticsRevenue {
+  total_revenue: number;
+  total_transactions: number;
+  average_transaction_value: number;
+  growth_percentage: number;
+  refunds: number;
+  by_method: Array<{ method: string; total: number; count: number }>;
+  daily: Array<{ date: string; revenue: number; transactions: number }>;
+}
+
+export interface AnalyticsTraffic {
+  page_views: number;
+  unique_visitors: number;
+  total_events: number;
+  by_event_type: Record<string, number>;
+  daily: Array<{ date: string; views: number; visitors: number }>;
+}
+
+export interface AnalyticsAi {
+  total_requests: number;
+  total_tokens: number;
+  total_cost: number;
+  average_tokens_per_request: number;
+  average_cost_per_request: number;
+  by_feature: Array<{
+    feature: string;
+    total_tokens: number;
+    cost: number;
+    requests: number;
+  }>;
+  daily: Array<{ date: string; tokens: number; cost: number; requests: number }>;
+}
+
+export interface AnalyticsExport {
+  report_id: number;
+  type: string;
+  format: string;
+  headers: string[];
+  data: string[][];
+  status: string;
+}
+
+export interface AnalyticsTrend {
+  date: string;
+  count: number;
+}
