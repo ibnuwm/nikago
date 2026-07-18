@@ -1054,3 +1054,38 @@ export interface AnalyticsTrend {
   date: string;
   count: number;
 }
+
+export interface SettingsProfile {
+  user: User;
+}
+
+export interface SettingsAccount {
+  timezone: string;
+  language: string;
+  member_since: string;
+  email_verified: boolean;
+}
+
+export interface SettingsPreferences {
+  theme: string;
+  language: string;
+  timezone: string;
+}
+
+export interface SettingsNotificationPreferences {
+  in_app: boolean;
+  email: boolean;
+  whatsapp: boolean;
+}
+
+export interface ApiKeyItem {
+  id: string;
+  name: string;
+  last_used_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+}
+
+export interface CreateApiKeyResponse extends ApiKeyItem {
+  plain_text_key: string;
+}
