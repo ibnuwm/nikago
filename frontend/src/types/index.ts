@@ -763,3 +763,31 @@ export interface RefundItem {
   status: string;
   created_at: string | null;
 }
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string | null;
+  channel: string;
+  is_read: boolean;
+  read_at: string | null;
+  data: Record<string, unknown> | null;
+  created_at: string | null;
+}
+
+export interface NotificationTemplate {
+  id: string;
+  code: string;
+  name: string;
+  channel: string;
+  subject: string | null;
+  content: string;
+  variables: string[] | null;
+  is_active: boolean;
+  created_at: string | null;
+}
+
+export interface UnreadCount {
+  count: number;
+}
