@@ -37,7 +37,7 @@ class GetVendorAnalyticsAction
         $averageRating = Vendor::whereBetween('created_at', [$startDate, $endDate])
             ->avg('rating');
 
-        $newVendors = Vendor::whereBetween('created_at', [$startDate, $endDate])->count();
+        $newVendors = $total;
 
         $byCity = Vendor::whereBetween('created_at', [$startDate, $endDate])
             ->whereNotNull('city')

@@ -4,7 +4,6 @@ interface SummaryCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
-  icon?: string;
   trend?: number;
   loading?: boolean;
 }

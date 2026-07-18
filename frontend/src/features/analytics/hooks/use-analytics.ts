@@ -11,7 +11,6 @@ import type {
   AnalyticsRevenue,
   AnalyticsTraffic,
   AnalyticsAi,
-  AnalyticsExport,
 } from '@/types';
 
 interface AnalyticsFilters {
@@ -134,18 +133,4 @@ export function useAiAnalytics(filters?: AnalyticsFilters) {
   });
 }
 
-export function useExportAnalytics(filters?: AnalyticsFilters & { type?: string; format?: string }) {
-  return useQuery({
-    queryKey: ['analytics', 'export', filters],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (filters?.start_date) params.set('start_date', filters.start_date);
-      if (filters?.end_date) params.set('end_date', filters.end_date);
-      if (filters?.type) params.set('type', filters.type);
-      if (filters?.format) params.set('format', filters.format);
-      const response = await api.get<ApiResponse<AnalyticsExport>>('/analytics/export', { params });
-      return response.data.data;
-    },
-    enabled: false,
-  });
-}
+

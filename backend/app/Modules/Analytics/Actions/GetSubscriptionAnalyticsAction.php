@@ -37,9 +37,6 @@ class GetSubscriptionAnalyticsAction
         $newSubscriptions = Subscription::whereBetween('created_at', [$startDate, $endDate])->count();
 
         $totalSubscribers = Subscription::where('status', 'active')->count();
-        $previousPeriodSubscribers = Subscription::where('status', 'active')
-            ->where('created_at', '<', $startDate)
-            ->count();
         $churned = Subscription::where('status', 'cancelled')
             ->whereBetween('cancelled_at', [$startDate, $endDate])
             ->count();
