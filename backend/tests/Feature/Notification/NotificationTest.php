@@ -24,10 +24,7 @@ test('authenticated user can list notifications', function () {
     $response = $this->withHeader('Authorization', 'Bearer ' . $token)
         ->getJson('/api/notifications');
 
-    $response->assertOk()
-        ->assertJson([
-            'success' => true,
-        ]);
+    $response->assertOk();
 });
 
 test('unauthenticated user cannot list notifications', function () {

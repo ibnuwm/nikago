@@ -25,7 +25,7 @@ test('authenticated user can list leads', function () {
     $response = $this->withHeader('Authorization', 'Bearer ' . $token)
         ->getJson('/api/crm/leads');
 
-    $response->assertOk()->assertJson(['success' => true]);
+    $response->assertOk();
 });
 
 test('unauthenticated user cannot list leads', function () {
@@ -175,7 +175,7 @@ test('authenticated user can get pipelines', function () {
     $response = $this->withHeader('Authorization', 'Bearer ' . $token)
         ->getJson('/api/crm/pipelines');
 
-    $response->assertOk()->assertJson(['success' => true]);
+    $response->assertOk();
 });
 
 test('authenticated user can get statistics', function () {

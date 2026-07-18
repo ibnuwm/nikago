@@ -36,7 +36,6 @@ return new class extends Migration
 
             $table->unique('uuid');
             $table->index('user_id');
-            $table->index('status');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_method_id')->references('id')->on('payment_methods')->onDelete('set null');
         });
