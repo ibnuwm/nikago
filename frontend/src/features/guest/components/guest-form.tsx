@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import type { Guest, GuestFormData } from '@/types';
 
 const guestSchema = z.object({
-  wedding_id: z.number({ required_error: 'Wedding is required' }),
+  wedding_id: z.number({ message: 'Wedding is required' }),
   name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
   phone: z.string().max(25, 'Phone must be less than 25 characters').nullable().optional(),
   email: z.string().email('Invalid email').max(255).nullable().optional().or(z.literal('')),

@@ -151,13 +151,6 @@ export interface InvitationFormData {
   description?: string | null;
 }
 
-export interface Subscription {
-  id: string;
-  plan: string;
-  status: string;
-  expires_at: string | null;
-}
-
 export interface InvitationTemplate {
   id: string;
   name: string;
@@ -325,7 +318,7 @@ export interface ChecklistItem {
   id: string;
   checklist_id: number;
   title: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   due_date: string | null;
   completed_at: string | null;
   sort_order: number;
@@ -360,7 +353,7 @@ export interface TimelineTask {
   timeline_id: number;
   title: string;
   description: string | null;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   start_date: string | null;
   due_date: string | null;
   duration_days: number;
@@ -447,7 +440,7 @@ export interface TimelineFormData {
   tasks?: {
     title: string;
     description?: string | null;
-    priority?: 'low' | 'medium' | 'high';
+    priority?: "low" | "medium" | "high";
     start_date?: string | null;
     due_date?: string | null;
     duration_days?: number;
@@ -535,7 +528,11 @@ export interface VendorFormData {
   cover?: string | null;
   operating_hours?: Record<string, { open: string; close: string }> | null;
   social_media?: Record<string, string> | null;
-  services?: { name: string; description?: string | null; starting_price?: number | null }[];
+  services?: {
+    name: string;
+    description?: string | null;
+    starting_price?: number | null;
+  }[];
 }
 
 export interface VendorStatistics {
@@ -681,4 +678,88 @@ export interface ReviewReport {
   reason: string;
   status: string;
   created_at: string;
+}
+
+export interface SubscriptionPlan {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+  monthly_price: number;
+  yearly_price: number | null;
+  is_active: boolean;
+  sort_order: number;
+  features: SubscriptionFeature[];
+  limits: FeatureLimit[];
+}
+
+export interface SubscriptionFeature {
+  code: string;
+  name: string;
+  description: string;
+}
+
+export interface FeatureLimit {
+  feature_code: string;
+  limit_value: number;
+}
+
+export interface Subscription {
+  id: string;
+  plan_id: number;
+  plan: SubscriptionPlan | null;
+  status: string;
+  started_at: string | null;
+  expired_at: string | null;
+  trial_ends_at: string | null;
+  auto_renew: boolean;
+  cancelled_at: string | null;
+  created_at: string | null;
+  histories?: SubscriptionHistory[];
+}
+
+export interface SubscriptionHistory {
+  id: number;
+  action: string;
+  notes: string | null;
+  plan: { code: string; name: string } | null;
+  old_plan: { code: string; name: string } | null;
+  created_at: string;
+}
+
+export interface PaymentMethodInfo {
+  code: string;
+  name: string;
+  provider: string;
+}
+
+export interface Payment {
+  id: string;
+  invoice_number: string;
+  amount: number;
+  status: string;
+  payment_method: PaymentMethodInfo | null;
+  paid_at: string | null;
+  expired_at: string | null;
+  notes: string | null;
+  items: PaymentItem[];
+  refunds: RefundItem[];
+  created_at: string | null;
+}
+
+export interface PaymentItem {
+  id: number;
+  item_type: string;
+  item_id: number | null;
+  name: string;
+  amount: number;
+  quantity: number;
+}
+
+export interface RefundItem {
+  id: string;
+  amount: number;
+  reason: string;
+  status: string;
+  created_at: string | null;
 }
