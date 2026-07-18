@@ -24,10 +24,12 @@ class GetPreferencesAction extends Action
             ->pluck('value', 'key')
             ->toArray();
 
+        $uid = $user->id;
+
         return [
-            'theme' => $settings['theme']['value'] ?? 'light',
-            'language' => $settings['language']['value'] ?? 'id',
-            'timezone' => $settings['timezone']['value'] ?? 'UTC',
+            'theme' => $settings["user_{$uid}_theme"]['value'] ?? 'light',
+            'language' => $settings["user_{$uid}_language"]['value'] ?? 'id',
+            'timezone' => $settings["user_{$uid}_timezone"]['value'] ?? 'UTC',
         ];
     }
 }

@@ -65,7 +65,7 @@ export function useUpdatePassword() {
   return useMutation({
     mutationFn: async (data: { current_password: string; password: string; password_confirmation: string }) => {
       const response = await api.put<ApiResponse<{ message: string }>>('/api/settings/password', data);
-      return response.data;
+      return response.data.data;
     },
   });
 }

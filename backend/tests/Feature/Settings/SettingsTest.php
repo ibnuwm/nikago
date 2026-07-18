@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Modules\Authentication\Models\User;
 use App\Modules\System\Models\ApiKey;
-use App\Modules\System\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);

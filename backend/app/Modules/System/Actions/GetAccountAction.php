@@ -24,9 +24,11 @@ class GetAccountAction extends Action
             ->pluck('value', 'key')
             ->toArray();
 
+        $uid = $user->id;
+
         return [
-            'timezone' => $settings['timezone'] ?? 'UTC',
-            'language' => $settings['language'] ?? 'id',
+            'timezone' => $settings["user_{$uid}_timezone"]['value'] ?? 'UTC',
+            'language' => $settings["user_{$uid}_language"]['value'] ?? 'id',
             'member_since' => $user->created_at?->toISOString(),
             'email_verified' => $user->hasVerifiedEmail(),
         ];

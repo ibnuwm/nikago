@@ -32,6 +32,7 @@ export function PasswordForm() {
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
           className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+          autoComplete="current-password"
           required
         />
       </div>
@@ -42,6 +43,7 @@ export function PasswordForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+          autoComplete="new-password"
           required
         />
       </div>
@@ -52,6 +54,7 @@ export function PasswordForm() {
           value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+          autoComplete="new-password"
           required
         />
       </div>

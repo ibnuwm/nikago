@@ -15,12 +15,13 @@ use App\Modules\System\Actions\ListApiKeysAction;
 use App\Modules\System\Actions\UpdateAccountAction;
 use App\Modules\System\Actions\UpdateNotificationPreferencesAction;
 use App\Modules\System\Actions\UpdatePreferencesAction;
-use App\Modules\System\Actions\UpdateProfileAction;
+use App\Modules\Authentication\Actions\UpdateProfileAction as AuthUpdateProfileAction;
+use App\Modules\Authentication\Requests\UpdateProfileRequest;
+use App\Modules\Authentication\Resources\UserResource;
 use App\Modules\System\Requests\CreateApiKeyRequest;
 use App\Modules\System\Requests\UpdateAccountRequest;
 use App\Modules\System\Requests\UpdateNotificationPreferencesRequest;
 use App\Modules\System\Requests\UpdatePreferencesRequest;
-use App\Modules\System\Requests\UpdateProfileRequest;
 use App\Modules\Authentication\Requests\UpdatePasswordRequest;
 use App\Modules\Authentication\Actions\UpdatePasswordAction;
 use Illuminate\Http\JsonResponse;
@@ -29,7 +30,7 @@ class SettingsController extends Controller
 {
     public function __construct(
         private readonly GetProfileAction $getProfileAction,
-        private readonly UpdateProfileAction $updateProfileAction,
+        private readonly AuthUpdateProfileAction $updateProfileAction,
         private readonly GetAccountAction $getAccountAction,
         private readonly UpdateAccountAction $updateAccountAction,
         private readonly UpdatePasswordAction $updatePasswordAction,
@@ -52,9 +53,11 @@ class SettingsController extends Controller
 
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
+        $user = $this->updateProfileAction->execute($request, $request->validated());
+
         return response()->json([
             'success' => true,
-            'data' => $this->updateProfileAction->execute($request, $request->validated()),
+            'data' => ['user' => new UserResource($user)],
         ]);
     }
 
