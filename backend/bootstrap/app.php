@@ -35,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('api')->group(__DIR__ . '/../routes/subscription.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/payment.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/notification.php');
+            Route::prefix('api')->group(__DIR__ . '/../routes/crm.php');
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {

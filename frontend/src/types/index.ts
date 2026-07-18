@@ -791,3 +791,71 @@ export interface NotificationTemplate {
 export interface UnreadCount {
   count: number;
 }
+
+export interface Lead {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  source: string | null;
+  stage: string;
+  deal_value: number | null;
+  notes: string | null;
+  assigned_to: { id: string; name: string } | null;
+  follow_ups: LeadFollowUp[];
+  activities: LeadActivity[];
+  closed_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface LeadFollowUp {
+  id: string;
+  type: string;
+  notes: string;
+  follow_up_date: string | null;
+  is_completed: boolean;
+  completed_at: string | null;
+  created_at: string | null;
+}
+
+export interface LeadActivity {
+  id: string;
+  type: string;
+  description: string;
+  metadata: Record<string, unknown> | null;
+  created_at: string | null;
+}
+
+export interface Pipeline {
+  id: string;
+  name: string;
+  label: string;
+  count: number;
+  value: number;
+}
+
+export interface LeadFormData {
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  source?: string | null;
+  deal_value?: number | null;
+  notes?: string | null;
+}
+
+export interface FollowUpFormData {
+  type: string;
+  notes: string;
+  follow_up_date?: string | null;
+}
+
+export interface CrmStatistics {
+  total_leads: number;
+  won: number;
+  lost: number;
+  active: number;
+  total_value: number;
+  won_value: number;
+  conversion_rate: number;
+}
