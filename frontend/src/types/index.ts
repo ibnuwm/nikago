@@ -1089,3 +1089,40 @@ export interface ApiKeyItem {
 export interface CreateApiKeyResponse extends ApiKeyItem {
   plain_text_key: string;
 }
+
+export interface IntegrationProvider {
+  id: number;
+  code: string;
+  name: string;
+  category: string;
+  description: string;
+  icon: string;
+  is_active: boolean;
+}
+
+export interface UserIntegration {
+  id: number;
+  code: string;
+  name: string;
+  category: string;
+  description: string;
+  icon: string;
+  is_connected: boolean;
+  credentials: string[];
+}
+
+export interface WebhookItem {
+  id: string;
+  uuid: string;
+  name: string;
+  url: string;
+  events: string[] | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface IntegrationTestResult {
+  provider: string;
+  is_connected: boolean;
+  status: string;
+}

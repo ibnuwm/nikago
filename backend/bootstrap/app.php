@@ -39,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('api')->group(__DIR__ . '/../routes/ai.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/analytics.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/settings.php');
+            Route::prefix('api')->group(__DIR__ . '/../routes/integration.php');
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CmsPageSeeder::class,
             BlogCategorySeeder::class,
             BlogTagSeeder::class,
+            IntegrationProviderSeeder::class,
         ]);
 
         // Create default admin user
