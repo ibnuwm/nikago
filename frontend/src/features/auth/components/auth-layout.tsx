@@ -41,7 +41,7 @@ export function AuthLayout({ title, description, children }: AuthLayoutProps) {
 
       {/* Right: Form */}
       <div className="flex flex-1 flex-col px-6 py-12 sm:px-12 lg:px-16">
-        <div className="mb-10 flex items-center gap-2 lg:hidden">
+        <div className="mb-10 flex items-center justify-center gap-2 lg:hidden">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-rose-500">
               <WeddingRingIcon className="h-5 w-5 text-white" />
@@ -50,7 +50,7 @@ export function AuthLayout({ title, description, children }: AuthLayoutProps) {
           </Link>
         </div>
 
-        <div className="flex w-full max-w-sm flex-1 flex-col justify-center">
+        <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center">
           {(title || description) && (
             <div className="mb-8">
               {title && (

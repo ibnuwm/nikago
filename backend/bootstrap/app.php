@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
         then: function (): void {
-            Route::prefix('auth')->group(__DIR__ . '/../routes/auth.php');
+            Route::prefix('api/auth')->group(__DIR__ . '/../routes/auth.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/dashboard.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/cms.php');
             Route::prefix('api')->group(__DIR__ . '/../routes/wedding.php');
