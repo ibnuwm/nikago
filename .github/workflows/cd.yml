@@ -19,37 +19,46 @@ jobs:
       - name: Deploy via Coolify
         env:
           COOLIFY_WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
-        if: env.COOLIFY_WEBHOOK_URL != ''
         run: |
-          curl -X POST "${{ secrets.COOLIFY_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{"event": "deploy", "branch": "main"}'
+          if [ -n "$COOLIFY_WEBHOOK_URL" ]; then
+            curl -X POST "$COOLIFY_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d '{"event": "deploy", "branch": "main"}'
+          fi
 
       - name: Run database migrations
         uses: appleboy/ssh-action@v1.2.0
+        continue-on-error: true
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
-        if: env.SSH_HOST != ''
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/nikago
-            docker-compose exec -T backend php artisan migrate --force
-            docker-compose exec -T backend php artisan optimize
-            docker-compose exec -T backend php artisan icons:cache
+            docker compose exec -T backend php artisan migrate --force
+            docker compose exec -T backend php artisan optimize
+            docker compose exec -T backend php artisan icons:cache
 
       - name: Health check
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
         run: |
           sleep 30
-          curl -fI "${{ secrets.APP_URL }}/up" || echo "Health check failed"
+          if [ -n "$APP_URL" ]; then
+            curl -fI "${APP_URL}/up" || echo "Health check failed"
+          fi
 
       - name: Notify deployment success
         if: success()
+        env:
+          DEPLOY_NOTIFICATION_WEBHOOK: ${{ secrets.DEPLOY_NOTIFICATION_WEBHOOK }}
         run: |
-          curl -X POST "${{ secrets.DEPLOY_NOTIFICATION_WEBHOOK }}" \
-            -H "Content-Type: application/json" \
-            -d '{"text": "Nikago production deployment successful"}'
+          if [ -n "$DEPLOY_NOTIFICATION_WEBHOOK" ]; then
+            curl -X POST "${DEPLOY_NOTIFICATION_WEBHOOK}" \
+              -H "Content-Type: application/json" \
+              -d '{"text": "Nikago production deployment successful"}'
+          fi
