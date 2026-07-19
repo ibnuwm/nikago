@@ -10,6 +10,11 @@ import { SummaryCard } from '@/features/dashboard/components/summary-card';
 import { RecentActivity } from '@/features/dashboard/components/recent-activity';
 import { ReminderCard } from '@/features/dashboard/components/reminder-card';
 import { WeddingProgress } from '@/features/dashboard/components/wedding-progress';
+import { EmptyState } from '@/features/dashboard/components/empty-state';
+import { CountdownCard } from '@/features/dashboard/components/countdown-card';
+import { WeddingReadiness } from '@/features/dashboard/components/wedding-readiness';
+import { QuickActions } from '@/features/dashboard/components/quick-actions';
+import { Users, UserCheck, DollarSign, Building2, CheckCircle } from 'lucide-react';
 
 export default function DashboardPage() {
   const { data: user, isLoading: isUserLoading } = useUser();
@@ -39,6 +44,7 @@ export default function DashboardPage() {
   const stats = dashboard?.statistics;
   const upcoming = dashboard?.upcoming_events;
   const activities = dashboard?.recent_activity ?? [];
+  const hasWedding = dashboard?.wedding !== null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -59,51 +65,90 @@ export default function DashboardPage() {
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-foreground">
-          Welcome back, {user.name}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Here&apos;s an overview of your wedding planning.
-        </p>
+        {!hasWedding ? (
+          <EmptyState userName={user.name} />
+        ) : (
+          <>
+            <h2 className="text-2xl font-bold text-foreground">
+              Welcome back, {user.name}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Here&apos;s an overview of your wedding planning.
+            </p>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <SummaryCard
-            title="Guests"
-            value={stats?.guests_count ?? 0}
-            description="Total invited"
-          />
-          <SummaryCard
-            title="RSVP Confirmed"
-            value={stats?.rsvp_confirmed_count ?? 0}
-            description={`${stats?.rsvp_pending_count ?? 0} pending`}
-          />
-          <SummaryCard
-            title="Budget"
-            value={`$${(stats?.budget_spent ?? 0).toLocaleString()}`}
-            description={`of $${(stats?.budget_total ?? 0).toLocaleString()} total`}
-          />
-          <SummaryCard
-            title="Vendors"
-            value={stats?.vendors_count ?? 0}
-            description="Booked vendors"
-          />
-        </div>
+            {upcoming?.wedding_date && upcoming?.days_remaining !== null && (
+              <div className="mt-6">
+                <CountdownCard
+                  daysRemaining={upcoming.days_remaining ?? 0}
+                  hoursRemaining={upcoming.hours_remaining ?? 0}
+                  weddingDate={upcoming.wedding_date}
+                  phase={upcoming.phase ?? ''}
+                />
+              </div>
+            )}
 
-        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <WeddingProgress
-              daysRemaining={upcoming?.days_remaining ?? null}
-              weddingDate={upcoming?.wedding_date ?? null}
-            />
-          </div>
-          <div>
-            <ReminderCard reminders={upcoming?.reminders ?? []} />
-          </div>
-        </div>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <SummaryCard
+                title="Guests"
+                value={stats?.guests_count ?? 0}
+                description={`${stats?.rsvp_total_guests ?? 0} attending`}
+                icon={<Users className="h-5 w-5" />}
+              />
+              <SummaryCard
+                title="RSVPs"
+                value={stats?.rsvp_confirmed_count ?? 0}
+                description={`${stats?.rsvp_pending_count ?? 0} pending`}
+                icon={<UserCheck className="h-5 w-5" />}
+              />
+              <SummaryCard
+                title="Budget"
+                value={`Rp${(stats?.budget_spent ?? 0).toLocaleString()}`}
+                description={`of Rp${(stats?.budget_total ?? 0).toLocaleString()}`}
+                icon={<DollarSign className="h-5 w-5" />}
+              />
+              <SummaryCard
+                title="Vendors"
+                value={stats?.vendors_count ?? 0}
+                description="Booked"
+                icon={<Building2 className="h-5 w-5" />}
+              />
+            </div>
 
-        <div className="mt-8">
-          <RecentActivity activities={activities} />
-        </div>
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <WeddingProgress
+                  daysRemaining={upcoming?.days_remaining ?? null}
+                  weddingDate={upcoming?.wedding_date ?? null}
+                />
+              </div>
+              <div>
+                <WeddingReadiness
+                  statistics={stats ?? {
+                    invitations_count: 0,
+                    guests_count: 0,
+                    rsvp_pending_count: 0,
+                    rsvp_confirmed_count: 0,
+                    rsvp_total_guests: 0,
+                    budget_total: 0,
+                    budget_spent: 0,
+                    vendors_count: 0,
+                    checklist_progress: 0,
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <RecentActivity activities={activities} />
+              </div>
+              <div className="space-y-6">
+                <ReminderCard reminders={upcoming?.reminders ?? []} />
+                <QuickActions />
+              </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
