@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedBigInteger('plan_id');
             $table->string('status')->default('active');
             $table->timestamp('started_at');
-            $table->timestamp('expired_at');
+            $table->timestamp('expired_at')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->boolean('auto_renew')->default(true);
             $table->timestamp('cancelled_at')->nullable();
