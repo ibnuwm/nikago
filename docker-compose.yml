@@ -19,6 +19,10 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: ${MYSQL_MEMORY_LIMIT:-512M}
 
   # Redis
   redis:
@@ -27,6 +31,7 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-} --appendonly yes
     volumes:
       - redis-data:/data
     networks:
@@ -35,6 +40,10 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: ${REDIS_MEMORY_LIMIT:-256M}
 
   # Meilisearch
   meilisearch:
@@ -45,7 +54,7 @@ services:
       - "7700:7700"
     environment:
       MEILI_MASTER_KEY: ${MEILISEARCH_KEY:-master-key-change-me}
-      MEILI_ENV: development
+      MEILI_ENV: production
     volumes:
       - meilisearch-data:/meili_data
     networks:
@@ -54,6 +63,10 @@ services:
       test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health"]
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: ${MEILISEARCH_MEMORY_LIMIT:-256M}
 
   # Backend (Laravel PHP-FPM)
   backend:
@@ -65,8 +78,8 @@ services:
     expose:
       - "9000"
     environment:
-      APP_ENV: local
-      APP_DEBUG: "true"
+      APP_ENV: production
+      APP_DEBUG: "false"
       DB_CONNECTION: mysql
       DB_HOST: mysql
       DB_PORT: 3306
@@ -75,9 +88,21 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-secret}
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
       MEILISEARCH_HOST: http://meilisearch:7700
       MEILISEARCH_KEY: ${MEILISEARCH_KEY:-master-key-change-me}
       SCOUT_DRIVER: meilisearch
+      HORIZON_EMAILS: ${HORIZON_EMAILS:-}
+      PULSE_ENABLED: "true"
+      LOG_CHANNEL: stack
+      APP_URL: ${APP_URL:-https://nikago.app}
+      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-nikago.app}
+      SESSION_DOMAIN: ${SESSION_DOMAIN:-.nikago.app}
+    volumes:
+      - backend-storage:/var/www/html/storage
     networks:
       - nikago-network
     depends_on:
@@ -87,6 +112,90 @@ services:
         condition: service_healthy
       meilisearch:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: ${BACKEND_MEMORY_LIMIT:-512M}
+
+  # Horizon (Queue Worker)
+  horizon:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nikago-horizon
+    restart: unless-stopped
+    command: ["php", "artisan", "horizon"]
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-nikago}
+      DB_USERNAME: ${DB_USERNAME:-nikago}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_KEY: ${MEILISEARCH_KEY:-master-key-change-me}
+      SCOUT_DRIVER: meilisearch
+      LOG_CHANNEL: stack
+    volumes:
+      - backend-storage:/var/www/html/storage
+    networks:
+      - nikago-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: ${HORIZON_MEMORY_LIMIT:-512M}
+
+  # Scheduler
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nikago-scheduler
+    restart: unless-stopped
+    command: ["php", "artisan", "schedule:work"]
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-nikago}
+      DB_USERNAME: ${DB_USERNAME:-nikago}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_KEY: ${MEILISEARCH_KEY:-master-key-change-me}
+      SCOUT_DRIVER: meilisearch
+      LOG_CHANNEL: stack
+    networks:
+      - nikago-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: ${SCHEDULER_MEMORY_LIMIT:-128M}
 
   # Frontend (Next.js)
   frontend:
@@ -95,15 +204,20 @@ services:
       dockerfile: Dockerfile
     container_name: nikago-frontend
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${APP_URL:-https://nikago.app}/api
       NEXT_PUBLIC_APP_NAME: Nikago
     networks:
       - nikago-network
     depends_on:
       - backend
+    deploy:
+      resources:
+        limits:
+          memory: ${FRONTEND_MEMORY_LIMIT:-256M}
 
   # Nginx
   nginx:
@@ -115,11 +229,17 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - backend-storage:/var/www/html/storage:ro
     networks:
       - nikago-network
     depends_on:
       - backend
       - frontend
+    deploy:
+      resources:
+        limits:
+          memory: ${NGINX_MEMORY_LIMIT:-128M}
 
 networks:
   nikago-network:
@@ -129,3 +249,4 @@ volumes:
   mysql-data:
   redis-data:
   meilisearch-data:
+  backend-storage:
