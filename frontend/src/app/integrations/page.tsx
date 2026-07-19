@@ -32,12 +32,6 @@ const categoryIcons: Record<string, React.ReactNode> = {
   Streaming: <Video className="w-5 h-5" />,
 };
 
-const providerConnectHooks = {
-  GOOGLE_OAUTH: { connect: 'useConnectGoogle', disconnect: 'useDisconnectGoogle' },
-  GOOGLE_CALENDAR: { connect: 'useConnectCalendar', disconnect: 'useDisconnectCalendar' },
-  WHATSAPP: { connect: 'useConnectWhatsapp', disconnect: 'useDisconnectWhatsapp' },
-};
-
 export default function IntegrationsPage() {
   const token = useAuthStore((s) => s.token);
   const router = useRouter();

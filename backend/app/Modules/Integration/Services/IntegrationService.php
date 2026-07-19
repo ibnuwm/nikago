@@ -6,9 +6,6 @@ namespace App\Modules\Integration\Services;
 
 use App\Modules\Integration\Models\Integration;
 use App\Modules\Integration\Models\IntegrationCredential;
-use App\Modules\Integration\Models\ApiLog;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Http\Request;
 
 class IntegrationService
 {
@@ -24,12 +21,16 @@ class IntegrationService
     public function getUserIntegrations(int $userId): array
     {
         $providers = Integration::where('is_active', true)->get();
+
+        $userCreds = IntegrationCredential::where('user_id', $userId)
+            ->whereIn('integration_id', $providers->pluck('id'))
+            ->get()
+            ->groupBy('integration_id');
+
         $result = [];
 
         foreach ($providers as $provider) {
-            $credentials = IntegrationCredential::where('user_id', $userId)
-                ->where('integration_id', $provider->id)
-                ->get();
+            $creds = $userCreds->get($provider->id, collect());
 
             $result[] = [
                 'id' => $provider->id,
@@ -38,8 +39,8 @@ class IntegrationService
                 'category' => $provider->category,
                 'description' => $provider->description,
                 'icon' => $provider->icon,
-                'is_connected' => $credentials->isNotEmpty(),
-                'credentials' => $credentials->pluck('key'),
+                'is_connected' => $creds->isNotEmpty(),
+                'credentials' => $creds->pluck('key'),
             ];
         }
 
@@ -84,8 +85,4 @@ class IntegrationService
             ->exists();
     }
 
-    public function logApiCall(array $data): ApiLog
-    {
-        return ApiLog::create($data);
-    }
 }

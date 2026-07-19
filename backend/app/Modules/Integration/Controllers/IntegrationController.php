@@ -9,8 +9,6 @@ use App\Modules\Integration\Services\IntegrationService;
 use App\Modules\Integration\Services\WebhookService;
 use App\Modules\Integration\Requests\ConnectRequest;
 use App\Modules\Integration\Requests\WebhookStoreRequest;
-use App\Modules\Integration\Resources\IntegrationResource;
-use App\Modules\Integration\Resources\WebhookResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
