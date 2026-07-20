@@ -24,6 +24,7 @@ class WeddingFactory extends Factory
             'status' => Wedding::STATUS_DRAFT,
             'theme' => null,
             'cover_image' => null,
+            'wedding_date' => fake()->dateTimeBetween('+3 months', '+12 months'),
             'published_at' => null,
         ];
     }

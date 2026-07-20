@@ -43,6 +43,7 @@ class Wedding extends Model
         'status',
         'theme',
         'cover_image',
+        'wedding_date',
         'published_at',
     ];
 
@@ -53,6 +54,7 @@ class Wedding extends Model
     protected function casts(): array
     {
         return [
+            'wedding_date' => 'date',
             'published_at' => 'datetime',
         ];
     }

@@ -69,9 +69,11 @@ export interface DashboardStatistics {
   guests_count: number;
   rsvp_pending_count: number;
   rsvp_confirmed_count: number;
+  rsvp_total_guests: number;
   budget_total: number;
   budget_spent: number;
   vendors_count: number;
+  checklist_progress: number;
 }
 
 export interface RecentActivity {
@@ -99,6 +101,8 @@ export interface Reminder {
 export interface UpcomingEvents {
   wedding_date: string | null;
   days_remaining: number | null;
+  hours_remaining: number | null;
+  phase: string | null;
   timeline_events: TimelineEvent[];
   reminders: Reminder[];
 }
@@ -119,6 +123,7 @@ export interface Wedding {
   status: string;
   theme: string | null;
   cover_image: string | null;
+  wedding_date: string | null;
   published_at: string | null;
   created_at: string;
   updated_at: string;
